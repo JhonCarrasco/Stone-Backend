@@ -1,4 +1,4 @@
-﻿using Stone.Entities.Generic;
+﻿using Stone.Entities;
 
 namespace Stone.Repositories.Interface
 {

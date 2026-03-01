@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Stone.Entities.Generic;
+using Stone.Entities;
 using Stone.Persistence;
 using Stone.Repositories.Implements;
 using Stone.Repositories.Interface;

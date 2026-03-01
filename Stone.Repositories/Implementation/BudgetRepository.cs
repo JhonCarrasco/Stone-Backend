@@ -1,4 +1,4 @@
-﻿using Stone.Entities.Budget;
+﻿using Stone.Entities;
 using Stone.Persistence;
 using Stone.Repositories.Implements;
 using Stone.Repositories.Interface;

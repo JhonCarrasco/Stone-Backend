@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Stone.Entities.Generic;
+using Stone.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

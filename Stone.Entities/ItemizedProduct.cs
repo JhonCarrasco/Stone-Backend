@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Stone.Entities.Budget
+namespace Stone.Entities
 {
     public class ItemizedProduct: EntityBase
     {
@@ -10,6 +10,8 @@ namespace Stone.Entities.Budget
         public double Long { get; set; }
         [Column("ancho")]
         public double Width { get; set; }
+        [Column("espesor")]
+        public double? Thickness { get; set; }
         [Column("color")]
         public string Color { get; set; }
         [Column("valor_unitario")]

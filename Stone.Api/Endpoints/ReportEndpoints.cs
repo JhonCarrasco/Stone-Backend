@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Stone.Entities.Generic;
+using Stone.Entities;
 using Stone.Services.Interface;
 
 namespace Stone.Api.Endpoints

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Stone.Entities.Generic;
+using Stone.Entities;
 
 namespace Stone.Persistence.Configurations
 {

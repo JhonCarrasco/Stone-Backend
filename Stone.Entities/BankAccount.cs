@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Stone.Entities.Generic
+namespace Stone.Entities
 {
     public class BankAccount : EntityBase
     {

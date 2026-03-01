@@ -19,6 +19,9 @@ namespace Stone.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<ConcertInfo>().HasNoKey();
             modelBuilder.Entity<ReportInfo>().HasNoKey().Property(e => e.Total).HasPrecision(18, 4);
+            //modelBuilder.Entity<Manufacturer>().HasNoKey();
+            //modelBuilder.Entity<Category>().HasNoKey();
+            //modelBuilder.Entity<UnitMeasurement>().HasNoKey();
 
 
             modelBuilder.Entity<User>(x => x.ToTable("User"));

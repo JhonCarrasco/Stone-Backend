@@ -1,5 +1,5 @@
 ﻿using Stone.Dto.Response;
-using Stone.Entities.Generic;
+using Stone.Entities;
 
 namespace Stone.Services.Interface
 {

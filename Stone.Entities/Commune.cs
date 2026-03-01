@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Stone.Entities.Generic
+namespace Stone.Entities
 {
-    public class Region : EntityBase
+    public class Commune : EntityBase
     {
         [Column("descripcion")]
         public string Description { get; set; }
-
     }
 }

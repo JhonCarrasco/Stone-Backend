@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Stone.Dto.Response;
-using Stone.Entities.Generic;
+using Stone.Entities;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
 

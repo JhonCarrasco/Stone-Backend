@@ -1,4 +1,4 @@
-﻿namespace Stone.Entities.Generic
+﻿namespace Stone.Entities
 {
     public class Constants
     {

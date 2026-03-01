@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Stone.Entities.Budget
+namespace Stone.Entities
 {
     public class ItemizedService : EntityBase
     {

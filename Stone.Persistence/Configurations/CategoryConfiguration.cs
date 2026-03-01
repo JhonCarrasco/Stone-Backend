@@ -4,20 +4,19 @@ using Stone.Entities;
 
 namespace Stone.Persistence.Configurations
 {
-    public class LocationConfiguration : IEntityTypeConfiguration<Location>
+    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<Location> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.Property(x => x.Address)
-                            .HasMaxLength(200)
+            builder.Property(x => x.Description)
+                            .HasMaxLength(100)
                             .IsUnicode(false);
 
-            builder.ToTable("ubicacion");
+            builder.ToTable("categoria");
 
             builder.Property(x => x.CreateAt)
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(GETUTCDATE())");
-
         }
     }
 }

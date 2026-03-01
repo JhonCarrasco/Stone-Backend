@@ -1,6 +1,4 @@
-﻿using Stone.Entities.Generic;
-
-namespace Stone.Entities
+﻿namespace Stone.Entities
 {
     public class Sale : EntityBase
     {
