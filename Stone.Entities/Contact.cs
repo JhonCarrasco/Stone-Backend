@@ -5,7 +5,7 @@ namespace Stone.Entities
     public class Contact : EntityBase
     {
         [Column("cargo")]
-        public string Role { get; set; }
+        public string BusinessActivity { get; set; }
         [Column("telefono")]
         public string Phone { get; set; }
         [Column("email")]
@@ -13,12 +13,12 @@ namespace Stone.Entities
         [Column("cliente_id")]        
         public int CustomerId { get; set; }
         [Column("persona_id")]
-        public int PersonaId { get; set; }
+        public int PersonId { get; set; }
         [Column("proveedor_id")]
         public int? ProviderId { get; set; }
 
         public virtual Customer? Customer { get; set; }
         public virtual Person? Person { get; set; }
-        public virtual Provider Provider { get; set; }
+        public virtual Provider? Provider { get; set; }
     }
 }

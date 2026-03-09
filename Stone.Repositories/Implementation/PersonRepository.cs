@@ -3,11 +3,6 @@ using Stone.Entities;
 using Stone.Persistence;
 using Stone.Repositories.Implements;
 using Stone.Repositories.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stone.Repositories.Implementation
 {

@@ -16,5 +16,6 @@ namespace Stone.Repositories.Implementation
         {
             return await context.Set<Customer>().FirstOrDefaultAsync(x => x.Email == email);
         }
+
     }
 }

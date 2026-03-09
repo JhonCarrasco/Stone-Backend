@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stone.Entities
 {
@@ -7,21 +8,21 @@ namespace Stone.Entities
         [Column("rut")]
         public string Rut { get; set; }
         [Column("email")]
-        public string Email { get; set; } = default!;
-        [Column("fullname")]
-        public string FullName { get; set; } = default!;
+        public string Email { get; set; }
+        [Column("razon_social")]
+        public string DisplayName { get; set; }
         [Column("persona_id")]
-        public int PersonId { get; set; }
+        public int? PersonId { get; set; }
         [Column("ubicacion_id")]
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         [Column("cuenta_banco_id")]
-        public int BankAccountId { get; set; }
+        public int? BankAccountId { get; set; }
         [Column("telefono")]
-        public string Phone { get; set; } = default!;
+        public string Phone { get; set; }
 
         public virtual BankAccount? BankAccount { get; set; }
         public virtual Person? Person { get; set; }
-        public virtual Location? Location { get; set; } = default;
+        public virtual Location? Location { get; set; }
         public virtual List<Contact>? Contacts { get; set; }
     }
 }

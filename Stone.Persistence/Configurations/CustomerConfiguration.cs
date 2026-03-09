@@ -15,7 +15,7 @@ namespace Stone.Persistence.Configurations
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            builder.Property(x => x.FullName)
+            builder.Property(x => x.DisplayName)
                 .HasMaxLength(200);
 
 

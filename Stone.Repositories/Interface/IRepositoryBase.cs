@@ -11,6 +11,7 @@ namespace Stone.Repositories.Interface
         Task<TEntity?> GetAsync(int id);
         Task<int> AddAsync(TEntity entity);
         Task UpdateAsync();
+        Task UpdateRangeAsync(TEntity entity);
         Task DeleteAsync(int id);
     }
 }

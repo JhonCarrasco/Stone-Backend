@@ -48,18 +48,14 @@ namespace Stone.Services.Implementation
                 var person = new Person
                 {
                     Rut = request.Rut,
-                    FirstName = request.FirstName,
-                    MiddleName = request.MiddleName,
-                    LastName = request.LastName,
-                    LastNameMother = request.LastNameMother
+                    DisplayName = request.DisplayName
                 };
 
                 var user = new User
                 {
                     UserName = request.Email,
                     Email = request.Email,                    
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
+                    FirstName = request.DisplayName,
                     EmailConfirmed = true
                 };
                 var responsePerson = await personService.AddAsync(person);
@@ -82,7 +78,7 @@ namespace Stone.Services.Implementation
                         var customer = new Customer()
                         {
                             Email = request.Email,
-                            FullName = $"{request.FirstName} {request.LastName}"
+                            DisplayName = request.DisplayName
                         };
 
                         await customerRepository.AddAsync(customer);

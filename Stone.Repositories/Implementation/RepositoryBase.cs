@@ -59,6 +59,15 @@ namespace Stone.Repositories.Implements
             await context.SaveChangesAsync();
         }
 
+        public virtual async Task UpdateRangeAsync(TEntity entity)
+        {
+            //await context.SaveChangesAsync();
+            context.Set<TEntity>()
+                .UpdateRange(entity);
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(int id)
         {
             var item = await GetAsync(id);

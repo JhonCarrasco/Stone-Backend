@@ -1,50 +1,48 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Stone.Dto.Request;
-using Stone.Entities;
 using Stone.Services.Interface;
 
 namespace Stone.Api.Controllers
 {
+    [Route("api/customers")]
     [ApiController]
-    [Route("api/budgets")]
-    public class BudgetsController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        private readonly IBudgetService budgetService;
-        private readonly ILogger<BudgetsController> logger;
+        private readonly ICustomerService customerService;
+        private readonly ILogger<CustomersController> logger;
 
-        public BudgetsController(IBudgetService budgetService, ILogger<BudgetsController> logger)
+        public CustomersController(ICustomerService customerService, ILogger<CustomersController> logger)
         {
-            this.budgetService = budgetService;
+            this.customerService = customerService;
             this.logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = await budgetService.GetAsync();
+            var response = await customerService.GetAsync();
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = await budgetService.GetAsync(id);
+            var response = await customerService.GetAsync(id);
             return response.Success ? Ok(response) : NotFound(response);
         }
+
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
-        public async Task<IActionResult> Post(BudgetRequestDto budgetRequestDTO)
+        public async Task<IActionResult> Post(CustomerRequestDto customerRequestDTO)
         {
-            var response = await budgetService.AddAsync(budgetRequestDTO);
+            var response = await customerService.AddAsync(customerRequestDTO);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut("{id:int}")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
-        public async Task<IActionResult> Put(int id, BudgetRequestDto budgetRequestDTO)
+        public async Task<IActionResult> Put(int id, CustomerRequestDto customerRequestDTO)
         {
-            var response = await budgetService.UpdateAsync(id, budgetRequestDTO);
+            var response = await customerService.UpdateAsync(id, customerRequestDTO);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -52,8 +50,9 @@ namespace Stone.Api.Controllers
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var response = await budgetService.DeleteAsync(id);
+            var response = await customerService.DeleteAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
     }
 }

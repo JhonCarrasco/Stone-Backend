@@ -6,15 +6,11 @@ namespace Stone.Dto.Request
     {
         [Required]
         [StringLength(200)]
-        public string FirstName { get; set; } = default!;
+        public string DisplayName { get; set; } = default!;
 
         [Required]
-        [StringLength(200)]
-
-        public string LastName { get; set; } = default!;
-        [StringLength(200)]
-        public string MiddleName { get; set; }
-
+        public int TypePerson { get; set; } = default!;
+        
         [StringLength(200)]
         [EmailAddress]
         public string Email { get; set; } = default!;
@@ -23,9 +19,6 @@ namespace Stone.Dto.Request
         [Required]
         public string Rut { get; set; } = default!;
         
-        [StringLength(200)]
-        public string LastNameMother { get; set; }
-
 
         [Required]
         public string Password { get; set; } = default!;

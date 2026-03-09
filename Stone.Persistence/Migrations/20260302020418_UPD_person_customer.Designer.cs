@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302020418_UPD_person_customer")]
+    partial class UPD_person_customer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -464,13 +467,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("activo");
 
-                    b.Property<string>("BusinessActivity")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("cargo");
-
                     b.Property<DateTime?>("CreateAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
@@ -486,7 +482,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
 
-                    b.Property<int>("PersonId")
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonaId")
                         .HasColumnType("int")
                         .HasColumnName("persona_id");
 
@@ -500,6 +499,13 @@ namespace Stone.Persistence.Migrations
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int")
                         .HasColumnName("proveedor_id");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("cargo");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -539,18 +545,18 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_creacion")
                         .HasDefaultValueSql("(GETUTCDATE())");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("razon_social");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("fullname");
 
                     b.Property<int?>("LocationId")
                         .HasColumnType("int")
@@ -907,12 +913,31 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_creacion")
                         .HasDefaultValueSql("(GETUTCDATE())");
 
-                    b.Property<string>("DisplayName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(200)
+                        .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("nombre_persona");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("nombre");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("paterno");
+
+                    b.Property<string>("LastNameMother")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("materno");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("segundo_nombre");
 
                     b.Property<string>("Rut")
                         .IsRequired()
@@ -920,10 +945,6 @@ namespace Stone.Persistence.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(12)")
                         .HasColumnName("rut");
-
-                    b.Property<int?>("TypePerson")
-                        .HasColumnType("int")
-                        .HasColumnName("tipo_persona");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
@@ -966,12 +987,11 @@ namespace Stone.Persistence.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("descripcion");
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<decimal?>("Long")
+                    b.Property<double?>("Long")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(8,3)")
+                        .HasColumnType("float(10)")
                         .HasColumnName("largo");
 
                     b.Property<int>("ManufacturerId")
@@ -982,9 +1002,9 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("proveedor_id");
 
-                    b.Property<decimal?>("Thickness")
+                    b.Property<double?>("Thickness")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(8,3)")
+                        .HasColumnType("float(10)")
                         .HasColumnName("espesor");
 
                     b.Property<string>("UnitMeasurement")
@@ -1001,9 +1021,9 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_actualizacion");
 
-                    b.Property<decimal?>("Width")
+                    b.Property<double?>("Width")
                         .HasPrecision(10, 3)
-                        .HasColumnType("decimal(8,3)")
+                        .HasColumnType("float(10)")
                         .HasColumnName("ancho");
 
                     b.HasKey("Id");
@@ -1401,9 +1421,7 @@ namespace Stone.Persistence.Migrations
 
                     b.HasOne("Stone.Entities.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PersonId");
 
                     b.HasOne("Stone.Entities.Provider", "Provider")
                         .WithMany("Contacts")

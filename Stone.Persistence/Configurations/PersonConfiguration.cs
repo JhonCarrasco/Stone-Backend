@@ -11,18 +11,10 @@ namespace Stone.Persistence.Configurations
             builder.Property(x => x.Rut)
                             .HasMaxLength(12)
                             .IsUnicode(false);
-            builder.Property(x => x.FirstName)
-                            .HasMaxLength(100)
+            builder.Property(x => x.DisplayName)
+                            .HasMaxLength(200)
                             .IsUnicode(false);
-            builder.Property(x => x.MiddleName)
-                            .HasMaxLength(50)
-                            .IsUnicode(false);
-            builder.Property(x => x.LastName)
-                            .HasMaxLength(50)
-                            .IsUnicode(false);
-            builder.Property(x => x.LastNameMother)
-                            .HasMaxLength(50)
-                            .IsUnicode(false);
+       
             builder.Property(x => x.CreateAt)
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(GETUTCDATE())");

@@ -15,7 +15,6 @@ using Stone.Repositories.Interface;
 using Stone.Services.Implementation;
 using Stone.Services.Interface;
 using Stone.Services.Profiles;
-using System.Runtime;
 using System.Text;
 
 
@@ -90,7 +89,14 @@ builder.Services.AddTransient<IConcertRepository, ConcertRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<ISaleRepository, SaleRepository>();
 builder.Services.AddTransient<IPersonRepository, PersonRepository>();
+builder.Services.AddTransient<IContactRepository, ContactRepository>();
+builder.Services.AddTransient<ILocationRepository, LocationRepository>();
+builder.Services.AddTransient<IBankAccountRepository, BankAccountRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<IManufacturerRepository, ManufacturerRepository>();
 
+builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IConcertService, ConcertService>();
 builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<ISaleService, SaleService>();
@@ -98,6 +104,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IFileStorage, FileStorageLocal>();
 builder.Services.AddTransient<IPersonService, PersonService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 
 
 //if (StorageAzure)
