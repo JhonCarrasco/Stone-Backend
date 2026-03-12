@@ -6,12 +6,12 @@ namespace Stone.Entities
     {
         [Column("descripcion")]
         public string Description { get; set; }
-        [Column("largo")]
-        public double Long { get; set; }
-        [Column("ancho")]
-        public double Width { get; set; }
-        [Column("espesor")]
-        public double? Thickness { get; set; }
+        [Column("largo", TypeName = "decimal(8,3)")]
+        public decimal Long { get; set; }
+        [Column("ancho", TypeName = "decimal(8,3)")]
+        public decimal Width { get; set; }
+        [Column("espesor", TypeName = "decimal(8,3)")]
+        public decimal? Thickness { get; set; }
         [Column("color")]
         public string Color { get; set; }
         [Column("valor_unitario")]
