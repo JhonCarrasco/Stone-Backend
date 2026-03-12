@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stone.Dto.Request;
 using Stone.Services.Interface;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 
 namespace Stone.Api.Controllers
@@ -52,6 +53,13 @@ namespace Stone.Api.Controllers
             var email = HttpContext.User.Claims.First(p => p.Type == ClaimTypes.Email).Value;
             var response = await service.ChangePasswordAsync(email, request);
             return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("CheckAuthStatus/{id}")]
+        public async Task<IActionResult> CheckAuthStatus([FromRoute] string id)
+        {            
+            var response = await service.CheckAuthStatus(id);
+            return response.Success ? Ok(response) : Unauthorized(response);
         }
     }
 }

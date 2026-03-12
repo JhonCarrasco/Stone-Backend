@@ -15,9 +15,10 @@ namespace Stone.Services.Implementation
         private readonly IPersonRepository personRepository;
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly ILocationRepository locationRepository;
-        private readonly IContactRepository contactRepository;
+        private readonly IContactRepository contactRepository;        
         private readonly ILogger<ICustomerService> logger;
         private readonly IMapper mapper;
+        private readonly IPersonService personService;
 
         public CustomerService(
             ICustomerRepository customerRepository, 
@@ -26,7 +27,8 @@ namespace Stone.Services.Implementation
             ILocationRepository locationRepository,
             IContactRepository contactRepository,
             ILogger<ICustomerService> logger,
-            IMapper mapper)
+            IMapper mapper,
+            IPersonService personService)
         {
             this.customerRepository = customerRepository;
             this.personRepository = personRepository;
@@ -35,14 +37,19 @@ namespace Stone.Services.Implementation
             this.contactRepository = contactRepository;
             this.logger = logger;
             this.mapper = mapper;
+            this.personService = personService;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<CustomerResponseDto>>> GetAsync()
+        public async Task<BaseResponseGeneric<ICollection<CustomerResponseDto>>> GetAsync(string? searchText, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<CustomerResponseDto>>();
             try
             {
-                var customerEntityList = await customerRepository.GetAsync();
+                var customerEntityList = await customerRepository.GetAsync(
+                    predicate: s => s.DisplayName.Contains(searchText ?? string.Empty) 
+                    || s.Rut.Contains(searchText ?? string.Empty),
+                    orderBy: x => x.DisplayName,
+                    pagination);
                 //response.Data = mapper.Map<ICollection<Customer>>(customerEntity);
                 response.Data = [];
                 foreach (var data in customerEntityList)
@@ -60,7 +67,7 @@ namespace Stone.Services.Implementation
                         UpdatedAt = data.UpdatedAt,
                         Rut = data.Rut,
                         Email = data.Email,
-                        FullName = data.DisplayName,
+                        DisplayName = data.DisplayName,
                         Phone = data.Phone,
                         Person = personaMapper,
                         Location = locationMapper,
@@ -121,7 +128,7 @@ namespace Stone.Services.Implementation
                     UpdatedAt = data.UpdatedAt,
                     Rut = data.Rut,
                     Email = data.Email,
-                    FullName = data.DisplayName,
+                    DisplayName = data.DisplayName,
                     Phone = data.Phone,
                     Person = personaMapper,
                     Location = locationMapper,
@@ -182,7 +189,7 @@ namespace Stone.Services.Implementation
                     Rut = request.Rut,
                     DisplayName = request.DisplayName,
                     TypePerson = request.TypePerson,
-                };                           
+                };
 
                 var personaId = await personRepository.AddAsync(personEntity);
 
@@ -244,7 +251,7 @@ namespace Stone.Services.Implementation
                         //Asignar id en entidad cliente
                         customerEntity.LocationId = locationId;
                     }
-                    
+
                 }
                 #endregion
 
@@ -292,6 +299,14 @@ namespace Stone.Services.Implementation
 
                 response.Data = customerId;
                 response.Success = true;
+
+
+                //var personaId = await personService.AddAsync(new Person
+                //{
+                //    Rut = request.Rut,
+                //    DisplayName = request.DisplayName,
+                //    TypePerson = request.TypePerson,
+                //});
             }
             catch (Exception ex)
             {

@@ -10,9 +10,9 @@ namespace Stone.Entities
         public int LocationId { get; set; }
         [Column("cuenta_banco_id")]
         public int BankAccountId { get; set; }
-        public virtual Person Person { get; set; }
-        public virtual Location Location { get; set; }
-        public virtual BankAccount BankAccount { get; set; }
-        public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual Person? Person { get; set; }
+        public virtual Location? Location { get; set; }
+        public virtual BankAccount? BankAccount { get; set; }
+        public virtual ICollection<Contact>? Contacts { get; set; }
     }
 }

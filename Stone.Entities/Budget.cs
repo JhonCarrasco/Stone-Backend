@@ -4,8 +4,6 @@ namespace Stone.Entities
 {
     public class Budget: EntityBase
     {
-        [Column("cliente_nombre")]
-        public string? CustomerName { get; set; }
         [Column("proyecto_nombre")]
         public string? ProjectName { get; set; }
         [Column("direccion")]
@@ -19,12 +17,20 @@ namespace Stone.Entities
         public int SubTotal { get; set; }
         [Column("neto")]
         public int Neto { get; set; }
-        [Column("iva")]
-        public int Iva { get; set; }
+        [Column("iva", TypeName = "decimal(3,2)")]
+        public decimal TaxRate { get; set; }
         [Column("valor_total")]
         public int TotalValue { get; set; }
         [Column("cliente_id")]
         public int? CustomerId { get; set; }
+        [Column("estado")]
+        public int? State { get; set; }
+        [Column("zona")]
+        public int? Zone { get; set; }
+        [Column("persona_contacto")]
+        public string? ContactPerson { get; set; }
+        [Column("telefono_contacto")]
+        public string? PhoneContact { get; set; }
 
         public virtual Customer? Customer { get; set; }
 
@@ -32,8 +38,5 @@ namespace Stone.Entities
 
         public virtual ICollection<ItemizedProduct> ItemizedProducts { get; set; }
         public virtual ICollection<ItemizedService> ItemizedServices { get; set; }
-        //public virtual List<ItemizedProduct>? ItemizedProducts { get; set; }
-        //public virtual List<ItemizedService>? ItemizedServices { get; set; }
-
     }
 }

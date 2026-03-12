@@ -70,9 +70,10 @@ namespace Stone.Repositories.Implementation
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()
+                .IgnoreQueryFilters()//traer data aunque relacion haya sido eliminado
                 .AsQueryable();
 
-            await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
+            await httpContextAccessor.HttpContext!.InsertarPaginacionHeader(queryable);
             var response = await queryable.Paginate(pagination).ToListAsync();
             return response;
         }

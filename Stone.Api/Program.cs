@@ -95,6 +95,17 @@ builder.Services.AddTransient<IBankAccountRepository, BankAccountRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddTransient<IBudgetRepository, BudgetRepository>();
+builder.Services.AddTransient<IItemizedProductRepository, ItemizedProductRepository>();
+builder.Services.AddTransient<IItemizedServiceRepository, ItemizedServiceRepository>();
+builder.Services.AddTransient<IBankRepository, BankRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ICommuneRepository, CommuneRepository>();
+builder.Services.AddTransient<IManufacturerRepository, ManufacturerRepository>();
+builder.Services.AddTransient<IRegionRepository, RegionRepository>();
+builder.Services.AddTransient<ITypeAccountRepository, TypeAccountRepository>();
+builder.Services.AddTransient<IUnitMeasurementRepository, UnitMeasurementRepository>();
+builder.Services.AddTransient<IProviderRepository, ProviderRepository>();
 
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IConcertService, ConcertService>();
@@ -105,6 +116,9 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IFileStorage, FileStorageLocal>();
 builder.Services.AddTransient<IPersonService, PersonService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IBudgetService, BudgetService>();
+builder.Services.AddTransient<IProviderService, ProviderService>();
+builder.Services.AddTransient<ISharedService, SharedService>();
 
 
 //if (StorageAzure)

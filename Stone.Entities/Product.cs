@@ -13,9 +13,9 @@ namespace Stone.Entities
         [Column("espesor", TypeName = "decimal(8,3)")]
         public decimal? Thickness { get; set; }
         [Column("color")]
-        public string Color { get; set; } = default!;
+        public string? Color { get; set; } = default!;
         [Column("unidad_medida")]
-        public string UnitMeasurement { get; set; } = default!;
+        public string? UnitMeasurement { get; set; } = default!;
         [Column("valor_unitario")]
         public int? UnitValue { get; set; }
 

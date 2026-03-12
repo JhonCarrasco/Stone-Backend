@@ -15,12 +15,15 @@ namespace Stone.Dto.Response
         public string? Color { get; set; }
         public string? UnitMeasurement { get; set; }
         public int? UnitValue { get; set; }
-        //public int? ManufacturerId { get; set; }
-        //public int? CategoryId { get; set; }
-        //public int? ProviderId { get; set; }
+        public string? ManufacturerName { get; set; }
+        public string? CategoryName { get; set; }
+        public string? ProviderName { get; set; }
+        public int? ManufacturerId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? ProviderId { get; set; }
 
-        public Manufacturer? Manufacturer { get; set; }
-        public Category? Category { get; set; }
-        public ProviderResponseDto? Provider { get; set; }
+        //public Manufacturer? Manufacturer { get; set; }
+        //public Category? Category { get; set; }
+        //public ProviderResponseDto? Provider { get; set; }
     }
 }
