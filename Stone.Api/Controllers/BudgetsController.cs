@@ -18,9 +18,9 @@ namespace Stone.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? searchText, [FromQuery] PaginationDto pagination)
         {
-            var response = await budgetService.GetAsync();
+            var response = await budgetService.GetAsync(searchText, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 

@@ -10,5 +10,6 @@ namespace Stone.Services.Interface
         Task<BaseResponse> RequestTokenToResetPasswordAsync(ResetPasswordRequestDto request);
         Task<BaseResponse> ResetPasswordAsync(NewPasswordRequestDto request);
         Task<BaseResponse> ChangePasswordAsync(string email, ChangePasswordRequestDto request);
+        Task<BaseResponseGeneric<LoginResponseDto>> CheckAuthStatus(string userId);
     }
 }

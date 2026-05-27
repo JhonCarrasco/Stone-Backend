@@ -5,6 +5,8 @@ using Stone.Dto.Response;
 using Stone.Entities;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
+using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Stone.Services.Implementation
 {
@@ -29,12 +31,16 @@ namespace Stone.Services.Implementation
             this.mapper = mapper;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<ProductResponseDto>>> GetAsync()
+        public async Task<BaseResponseGeneric<ICollection<ProductResponseDto>>> GetAsync(string? searchText, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<ProductResponseDto>>();
             try
             {
-                var productEntityList = await productRepository.GetAsync();
+                var productEntityList = await productRepository.GetAsync(
+                    predicate: s => s.Description.Contains(searchText ?? string.Empty),
+                    orderBy: x => x.Description,
+                    pagination);
+
                 if (productEntityList == null)
                 {
                     logger.LogError(null, $"ERROR: BUSCAR Productos");
@@ -49,7 +55,7 @@ namespace Stone.Services.Implementation
                     var manufacturerMapper = mapper.Map<Manufacturer>(data.Manufacturer);
                     var categoryMapper = mapper.Map<Category>(data.Category);
                     var providerMapper = mapper.Map<Provider>(data.Provider);
-                    var contactsMapper = mapper.Map<List<Contact>>(data.Provider!.Contacts);
+                    var contactsMapper = data.Provider == null ? null : mapper.Map<List<Contact>>(data.Provider!.Contacts);
 
                     var productResponse = new ProductResponseDto
                     {
@@ -64,46 +70,61 @@ namespace Stone.Services.Implementation
                         Color = data.Color,
                         UnitMeasurement = data.UnitMeasurement,
                         UnitValue = data.UnitValue,
-                        Manufacturer = manufacturerMapper,
-                        Category = categoryMapper
+                        ManufacturerName = manufacturerMapper is not null ? manufacturerMapper.Description : null,
+                        CategoryName = categoryMapper is not null ? categoryMapper.Description : null,
+                        ProviderName = providerMapper is not null ? providerMapper.Person!.DisplayName : null,
+                        ManufacturerId = manufacturerMapper is not null ? manufacturerMapper.Id : null,
+                        CategoryId = categoryMapper is not null ? categoryMapper.Id : null,
+                        ProviderId = providerMapper is not null ? providerMapper.Id : null,
+                        //Manufacturer = manufacturerMapper,
+                        //Category = categoryMapper
                     };
+
                     //Mapear provider
-                    var providerResponse = new ProviderResponseDto
-                    {
-                        Id = providerMapper.Id,
-                        Active = providerMapper.Active,
-                        CreateAt = providerMapper.CreateAt,
-                        UpdatedAt = providerMapper.UpdatedAt,
-                        PersonId = providerMapper.PersonId,
-                        LocationId = providerMapper.LocationId,
-                        BankAccountId = providerMapper.BankAccountId
-                    };
+                    //var providerResponse = new ProviderResponseDto();
+                    //if (providerMapper is not null)
+                    //{
+                    //    providerResponse = new ProviderResponseDto
+                    //    {
+                    //        Id = providerMapper.Id,
+                    //        Active = providerMapper.Active,
+                    //        CreateAt = providerMapper.CreateAt,
+                    //        UpdatedAt = providerMapper.UpdatedAt,
+                    //        PersonId = providerMapper.PersonId,
+                    //        LocationId = providerMapper.LocationId,
+                    //        BankAccountId = providerMapper.BankAccountId
+                    //    };
+                    //}
+                    
 
-                    if (contactsMapper is not null)
-                    {
-                        var contactsList = new List<ContactResponseDto>();
-                        foreach (var itemContact in contactsMapper)
-                        {
-                            var contactsResponse = new ContactResponseDto
-                            {
-                                ContactId = itemContact.Id,
-                                BusinessActivity = itemContact.BusinessActivity,
-                                Phone = itemContact.Phone,
-                                Email = itemContact.Email,
-                                PersonId = itemContact.PersonId,
-                                Rut = itemContact.Person!.Rut,
-                                DisplayName = itemContact.Person.DisplayName,
-                                ProviderId = itemContact.Provider!.Id,
-                                ProviderName = itemContact.Provider.Person.DisplayName
-                            };
-                            contactsList.Add(contactsResponse);
+                    //if (contactsMapper is not null)
+                    //{
+                    //    var contactsList = new List<ContactResponseDto>();
+                    //    foreach (var itemContact in contactsMapper)
+                    //    {
+                    //        var contactsResponse = new ContactResponseDto
+                    //        {
+                    //            ContactId = itemContact.Id,
+                    //            BusinessActivity = itemContact.BusinessActivity,
+                    //            Phone = itemContact.Phone,
+                    //            Email = itemContact.Email,
+                    //            PersonId = itemContact.PersonId,
+                    //            Rut = itemContact.Person!.Rut,
+                    //            DisplayName = itemContact.Person.DisplayName,
+                    //            ProviderId = itemContact.Provider!.Id,
+                    //            ProviderName = itemContact.Provider.Person.DisplayName
+                    //        };
+                    //        contactsList.Add(contactsResponse);
 
-                        }
-                       providerResponse.Contacts = contactsList;
-                    }
-                    productResponse.Provider = providerResponse;
+                    //    }
+                    //   providerResponse.Contacts = contactsList;
+                    //}
+                    //productResponse.Provider = providerResponse;
                     response.Data.Add(productResponse);
-                }                
+                }
+
+                response.Count = await productRepository.CountAsync(predicate: s => s.Description.Contains(searchText ?? string.Empty));
+                response.Pages = (int?)(double)Math.Ceiling((double)((float)response.Count / (float)pagination.Limit));
                 response.Success = true;
             }
             catch (Exception ex)
@@ -131,7 +152,7 @@ namespace Stone.Services.Implementation
                 var manufacturerMapper = mapper.Map<Manufacturer>(productData.Manufacturer);
                 var categoryMapper = mapper.Map<Category>(productData.Category);
                 var providerMapper = mapper.Map<Provider>(productData.Provider);
-                var contactsMapper = mapper.Map<List<Contact>>(productData.Provider!.Contacts);
+                var contactsMapper = productData.Provider == null ? null : mapper.Map<List<Contact>>(productData.Provider!.Contacts);
 
                 var productResponse = new ProductResponseDto
                 {
@@ -146,21 +167,28 @@ namespace Stone.Services.Implementation
                     Color = productData.Color,
                     UnitMeasurement = productData.UnitMeasurement,
                     UnitValue = productData.UnitValue,
-                    Manufacturer = manufacturerMapper,
-                    Category = categoryMapper
+                    ManufacturerName = manufacturerMapper.Description,
+                    ManufacturerId = manufacturerMapper.Id,
+                    CategoryName = categoryMapper is null ? null : categoryMapper.Description,
+                    CategoryId = categoryMapper is null ? null : categoryMapper.Id
                 };
                 //Mapear provider
-                var providerResponse = new ProviderResponseDto
+                var providerResponse = new ProviderResponseDto();
+                if (providerMapper is not null)
                 {
-                    Id = providerMapper.Id,
-                    Active = providerMapper.Active,
-                    CreateAt = providerMapper.CreateAt,
-                    UpdatedAt = providerMapper.UpdatedAt,
-                    PersonId = providerMapper.PersonId,
-                    LocationId = providerMapper.LocationId,
-                    BankAccountId = providerMapper.BankAccountId
-                };
-
+                    providerResponse = new ProviderResponseDto
+                    {
+                        Id = providerMapper.Id,
+                        Active = providerMapper.Active,
+                        CreateAt = providerMapper.CreateAt,
+                        UpdatedAt = providerMapper.UpdatedAt,
+                        PersonName = providerMapper.Person!.DisplayName,
+                        PersonId = providerMapper.PersonId,
+                        LocationId = providerMapper.LocationId,
+                        BankAccountId = providerMapper.BankAccountId
+                    };
+                }
+                    
                 if (contactsMapper is not null)
                 {
                     var contactsList = new List<ContactResponseDto>();
@@ -176,14 +204,15 @@ namespace Stone.Services.Implementation
                             Rut = itemContact.Person!.Rut,
                             DisplayName = itemContact.Person.DisplayName,
                             ProviderId = itemContact.Provider!.Id,
-                            ProviderName = itemContact.Provider.Person.DisplayName
+                            ProviderName = itemContact.Provider?.Person?.DisplayName
                         };
                         contactsList.Add(contactsResponse);
 
                     }
                     providerResponse.Contacts = contactsList;
                 }
-                productResponse.Provider = providerResponse;
+                productResponse.ProviderName = providerResponse.PersonName;
+                productResponse.ProviderId = providerResponse.Id;
                 response.Data = productResponse;
                 
                 response.Success = true;
@@ -210,21 +239,21 @@ namespace Stone.Services.Implementation
                     //TODO: responder exception e interrumpir flujo
                 }
 
-                productData = new Product
+                var newProduct = new Product
                 {
                     Description         = request.Description,
                     Long                = request.Long,
                     Width               = request.Width,
                     Thickness           = request.Thickness,
-                    Color               = request.Color,
+                    Color               = string.IsNullOrEmpty(request.Color) ? null : request.Color,
                     UnitMeasurement     = request.UnitMeasurement,
                     UnitValue           = request.UnitValue,
                     ManufacturerId      = (int)request.ManufacturerId,
-                    CategoryId          = request.CategoryId,
-                    ProviderId          = request.ProviderId
+                    CategoryId          = request.CategoryId <= 0? null : request.CategoryId,
+                    ProviderId          = request.ProviderId <= 0 ? null : request.ProviderId,
                 };
 
-                var productId = await productRepository.AddAsync(productData);
+                var productId = await productRepository.AddAsync(newProduct);
 
                 response.Data = productId;
                 response.Success = true;
@@ -262,8 +291,8 @@ namespace Stone.Services.Implementation
                 productData.UnitMeasurement = request.UnitMeasurement;
                 productData.UnitValue       = request.UnitValue;
                 productData.ManufacturerId  = (int)request.ManufacturerId;
-                productData.CategoryId      = request.CategoryId;
-                productData.ProviderId      = request.ProviderId;                
+                productData.CategoryId = request.CategoryId <= 0 ? null : request.CategoryId;
+                productData.ProviderId = request.ProviderId <= 0 ? null : request.ProviderId;               
                 await productRepository.UpdateAsync();
 
                 response.Success = true;
@@ -298,5 +327,6 @@ namespace Stone.Services.Implementation
             }
             return response;
         }
+
     }
 }

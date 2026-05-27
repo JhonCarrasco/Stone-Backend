@@ -11,7 +11,7 @@ namespace Stone.Api.Endpoints
             {
                 var concerts = await concertService.GetAsync("", new PaginationDto
                 {
-                    Page = 1,
+                    OffSet = 1,
                     Limit = 10
                 });
 

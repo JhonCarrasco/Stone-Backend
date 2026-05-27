@@ -23,6 +23,14 @@ namespace Stone.Entities
         public int TotalValue { get; set; }
         [Column("cliente_id")]
         public int? CustomerId { get; set; }
+        [Column("estado")]
+        public int? State { get; set; }
+        [Column("zona")]
+        public int? Zone { get; set; }
+        [Column("persona_contacto")]
+        public string? ContactPerson { get; set; }
+        [Column("telefono_contacto")]
+        public string? PhoneContact { get; set; }
 
         public virtual Customer? Customer { get; set; }
 

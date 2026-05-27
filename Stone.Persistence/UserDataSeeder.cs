@@ -30,7 +30,8 @@ namespace Stone.Persistence
                 UserName = "admin@stone.com",
                 Email = "admin@stone.com",
                 PhoneNumber = "56991214034",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                LockoutEnabled = false
             };
             if (await userManager.FindByEmailAsync("admin@stone.com") is null)
             {

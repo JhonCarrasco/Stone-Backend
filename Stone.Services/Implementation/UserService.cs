@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Stone.Dto.Helper;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
@@ -142,8 +144,9 @@ namespace Stone.Services.Implementation
             //creamos los claims, que son informaciones emitidas por una fuente confiable, pueden contener cualquier key/value que definamos y que son añadidas al TOKEN
             var claims = new List<Claim>()
            {
-               new Claim(ClaimTypes.Email,user.Email), //Nunca enviar data sensible en un claim, ya que es leído por el cliente
-               new Claim(ClaimTypes.Name,$"{user.FirstName} {user.LastName}")
+               //new Claim(ClaimTypes.Email,user.Email), //Nunca enviar data sensible en un claim, ya que es leído por el cliente
+               //new Claim(ClaimTypes.Name,$"{user.FirstName} {user.LastName}"),
+               new Claim("id",user.Id),
            };
 
             var roles = await userManager.GetRolesAsync(user);
@@ -158,10 +161,21 @@ namespace Stone.Services.Implementation
             var expiracion = DateTime.UtcNow.AddSeconds(options.Value.Jwt.LifetimeInSeconds);//se puede configurar cualquier espacio de tiempo de validez de un token según las reglas de negocio
 
             var securityToken = new JwtSecurityToken(issuer: null, audience: null, claims: claims, signingCredentials: credenciales, expires: expiracion);
+            
+            var userResponseDto = new UserResponseDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FullName = $"{user.FirstName} {user.LastName}",
+                IsActive = !user.LockoutEnabled,
+                Roles = roles
+            };
+            
             return new LoginResponseDto
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                ExpirationDate = expiracion
+                ExpirationDate = expiracion,
+                User = userResponseDto
             };
         }
 
@@ -277,6 +291,32 @@ namespace Stone.Services.Implementation
                 logger.LogCritical(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
             return response;
+        }
+
+        public async Task<BaseResponseGeneric<LoginResponseDto>> CheckAuthStatus(string userId)
+        {
+            var response = new BaseResponseGeneric<LoginResponseDto>();
+            try
+            {
+                var user = await userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    response.Success = true;
+                    response.Data = await ConstruirToken(user);
+                }
+                else
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"Usuario {userId} no encontrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrió un error.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;            
         }
     }
 }

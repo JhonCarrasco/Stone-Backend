@@ -1,0 +1,32 @@
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+# This stage is used to build the service project
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+COPY ["Stone.Api/Stone.Api.csproj", "Stone.Api/"]
+COPY ["Stone.Dto/Stone.Dto.csproj", "Stone.Dto/"]
+COPY ["Stone.Entities/Stone.Entities.csproj", "Stone.Entities/"]
+COPY ["Stone.Services/Stone.Services.csproj", "Stone.Services/"]
+COPY ["Stone.Repositories/Stone.Repositories.csproj", "Stone.Repositories/"]
+COPY ["Stone.Persistence/Stone.Persistence.csproj", "Stone.Persistence/"]
+RUN dotnet restore "./Stone.Api/Stone.Api.csproj"
+COPY . .
+WORKDIR "/src/Stone.Api"
+RUN dotnet build "./Stone.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# This stage is used to publish the service project to be copied to the final stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Stone.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Stone.Api.dll"]

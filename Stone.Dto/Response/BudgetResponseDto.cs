@@ -17,6 +17,10 @@ namespace Stone.Dto.Response
         public decimal TaxRate { get; set; }
         public int TotalValue { get; set; }
         public int? CustomerId { get; set; }
+        public int? State { get; set; }
+        public int? Zone { get; set; }
+        public string? ContactPerson { get; set; }
+        public string? PhoneContact { get; set; }
 
         public CustomerResponseDto? Customer { get; set; }
         public ICollection<ItemizedProductResponseDto>? ItemizedProducts { get; set; }

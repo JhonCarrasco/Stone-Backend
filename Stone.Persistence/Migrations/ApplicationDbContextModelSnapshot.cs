@@ -257,6 +257,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("direccion");
 
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("persona_contacto");
+
                     b.Property<DateTime?>("CreateAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
@@ -281,10 +285,18 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("neto");
 
+                    b.Property<string>("PhoneContact")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("telefono_contacto");
+
                     b.Property<string>("ProjectName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("proyecto_nombre");
+
+                    b.Property<int?>("State")
+                        .HasColumnType("int")
+                        .HasColumnName("estado");
 
                     b.Property<int>("SubTotal")
                         .HasColumnType("int")
@@ -301,6 +313,10 @@ namespace Stone.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_actualizacion");
+
+                    b.Property<int?>("Zone")
+                        .HasColumnType("int")
+                        .HasColumnName("zona");
 
                     b.HasKey("Id");
 
@@ -694,7 +710,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("presupuesto_id");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("color");
@@ -711,21 +726,25 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("descripcion");
 
-                    b.Property<decimal>("Long")
+                    b.Property<decimal?>("Long")
                         .HasPrecision(10, 3)
                         .HasColumnType("decimal(8,3)")
                         .HasColumnName("largo");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("material");
 
                     b.Property<decimal?>("Thickness")
                         .HasPrecision(10, 3)
                         .HasColumnType("decimal(8,3)")
                         .HasColumnName("espesor");
 
-                    b.Property<int>("TotalValue")
+                    b.Property<int?>("TotalValue")
                         .HasColumnType("int")
                         .HasColumnName("valor_total");
 
-                    b.Property<int>("UnitValue")
+                    b.Property<int?>("UnitValue")
                         .HasColumnType("int")
                         .HasColumnName("valor_unitario");
 
@@ -733,12 +752,12 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_actualizacion");
 
-                    b.Property<decimal>("Width")
+                    b.Property<decimal?>("Width")
                         .HasPrecision(10, 3)
                         .HasColumnType("decimal(8,3)")
                         .HasColumnName("ancho");
 
-                    b.Property<int>("amount")
+                    b.Property<int?>("amount")
                         .HasColumnType("int")
                         .HasColumnName("cantidad");
 
@@ -947,7 +966,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("categoria_id");
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("color");
@@ -983,7 +1001,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("espesor");
 
                     b.Property<string>("UnitMeasurement")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("unidad_medida");

@@ -1,8 +1,13 @@
-﻿namespace Stone.Dto.Request
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Stone.Dto.Request
 {
     public class BudgetRequestDto
     {
         public int? Id { get; set; }
+        public bool Active { get; set; }
+        public DateTime? CreateAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public string? ProjectName { get; set; }
         public string? Address { get; set; }
         public string? Description { get; set; }
@@ -12,6 +17,10 @@
         public decimal TaxRate { get; set; }
         public int TotalValue { get; set; }
         public int CustomerId { get; set; }
+        public int? State { get; set; }
+        public int? Zone { get; set; }
+        public string? ContactPerson { get; set; }
+        public string? PhoneContact { get; set; }
 
         public ICollection<ItemizedProductRequestDto>? ItemizedProducts { get; set; }
         public ICollection<ItemizedServiceRequestDto>? ItemizedServices { get; set; }

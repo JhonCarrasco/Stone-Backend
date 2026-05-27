@@ -35,12 +35,23 @@ namespace Stone.Services.Implementation
             this.mapper = mapper;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<BudgetResponseDto>>> GetAsync()
+        public async Task<BaseResponseGeneric<ICollection<BudgetResponseDto>>> GetAsync(string? searchText, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<BudgetResponseDto>>();
             try
             {
-                var EntityList = await budgetRepository.GetAsync();
+                var EntityList = await budgetRepository.GetAsync(predicate: s => s.Description.Contains(searchText ?? string.Empty),
+                    orderBy: x => x.Description,
+                    pagination);
+
+                if (EntityList == null)
+                {
+                    logger.LogError(null, $"ERROR: BUSCAR Presupuestos");
+                    response.ErrorMessage = "Presupuestos no existe.";
+                    return response;
+                    //TODO: responder exception e interrumpir flujo
+                }
+
                 response.Data = [];
                 foreach (var data in EntityList)
                 {
@@ -62,7 +73,11 @@ namespace Stone.Services.Implementation
                         Neto = data.Neto,
                         TaxRate = data.TaxRate,
                         TotalValue = data.TotalValue,
-                        CustomerId = data.CustomerId
+                        CustomerId = data.CustomerId,
+                        State = data.State,
+                        Zone = data.Zone,
+                        ContactPerson = data.ContactPerson,
+                        PhoneContact = data.PhoneContact
                     };
 
                     if (customerMapper is not null)
@@ -85,11 +100,15 @@ namespace Stone.Services.Implementation
                             var itemizedProductResponse = new ItemizedProductResponseDto
                             {
                                 Id = item.Id,
+                                Active = item.Active,
+                                CreateAt = item.CreateAt,
+                                UpdatedAt = item.UpdatedAt,
                                 Description = item.Description,
                                 Long = item.Long,
                                 Width = item.Width,
                                 Thickness = item.Thickness,
                                 Color = item.Color,
+                                Material = item.Material,
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
@@ -107,6 +126,9 @@ namespace Stone.Services.Implementation
                             var itemizedServiceResponse = new ItemizedServiceResponseDto
                             {
                                 Id = item.Id,
+                                Active = item.Active,
+                                CreateAt = item.CreateAt,
+                                UpdatedAt = item.UpdatedAt,
                                 Description = item.Description,
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
@@ -161,7 +183,11 @@ namespace Stone.Services.Implementation
                     Neto = EntityData.Neto,
                     TaxRate = EntityData.TaxRate,
                     TotalValue = EntityData.TotalValue,
-                    CustomerId = EntityData.CustomerId
+                    CustomerId = EntityData.CustomerId,
+                    State = EntityData.State,
+                    Zone = EntityData.Zone,
+                    ContactPerson = EntityData.ContactPerson,
+                    PhoneContact = EntityData.PhoneContact
                 };
 
                     if (customerMapper is not null)
@@ -184,11 +210,15 @@ namespace Stone.Services.Implementation
                             var itemizedProductResponse = new ItemizedProductResponseDto
                             {
                                 Id = item.Id,
+                                Active = item.Active,
+                                CreateAt = item.CreateAt,
+                                UpdatedAt = item.UpdatedAt,
                                 Description = item.Description,
                                 Long = item.Long,
                                 Width = item.Width,
                                 Thickness = item.Thickness,
                                 Color = item.Color,
+                                Material = item.Material,
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
@@ -206,6 +236,9 @@ namespace Stone.Services.Implementation
                             var itemizedServiceResponse = new ItemizedServiceResponseDto
                             {
                                 Id = item.Id,
+                                Active = item.Active,
+                                CreateAt = item.CreateAt,
+                                UpdatedAt = item.UpdatedAt,
                                 Description = item.Description,
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
@@ -242,7 +275,11 @@ namespace Stone.Services.Implementation
                     Neto = request.Neto,
                     TaxRate = (request.TaxRate/100), //porcentaje Iva en decimal hacia DB
                     TotalValue = request.TotalValue,
-                    CustomerId = request.CustomerId
+                    CustomerId = request.CustomerId,
+                    State = request.State,
+                    Zone = request.Zone,
+                    ContactPerson = request.ContactPerson,
+                    PhoneContact = request.PhoneContact
                 };
 
                 var budgetId = await budgetRepository.AddAsync(budgetData);
@@ -259,6 +296,7 @@ namespace Stone.Services.Implementation
                             Width = item.Width,
                             Thickness = item.Thickness,
                             Color = item.Color,
+                            Material = item.Material,
                             UnitValue = item.UnitValue,
                             amount = item.amount,
                             TotalValue = item.TotalValue,
@@ -319,8 +357,13 @@ namespace Stone.Services.Implementation
                 budgetData.Neto         = request.Neto;
                 budgetData.TaxRate = (request.TaxRate / 100); //porcentaje Iva en decimal hacia DB
                 budgetData.TotalValue   = request.TotalValue;
-                //budgetData.CustomerId   = request.CustomerId;
-                budgetData.UpdatedAt    = DateTime.UtcNow;                
+                budgetData.CustomerId   = request.CustomerId;
+                budgetData.UpdatedAt    = DateTime.UtcNow;     
+                budgetData.State = request.State;
+                budgetData.Zone = request.Zone;
+                budgetData.ContactPerson = request.ContactPerson;
+                budgetData.PhoneContact = request.PhoneContact;
+                
                 await budgetRepository.UpdateAsync();
 
                 //Inyectar listado Productos
@@ -338,6 +381,7 @@ namespace Stone.Services.Implementation
                                 Width = item.Width,
                                 Thickness = item.Thickness,
                                 Color = item.Color,
+                                Material = item.Material,
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
@@ -354,11 +398,15 @@ namespace Stone.Services.Implementation
                             itemProductoData.Width = item.Width;
                             itemProductoData.Thickness = item.Thickness;
                             itemProductoData.Color = item.Color;
+                            itemProductoData.Material = item.Material;
                             itemProductoData.UnitValue = item.UnitValue;
                             itemProductoData.amount = item.amount;
                             itemProductoData.TotalValue = item.TotalValue;
                             //itemProductoData.BudgetId = item.BudgetId;
+                            itemProductoData.Active = item.Active;
+                            itemProductoData.CreateAt = item.CreateAt;
                             itemProductoData.UpdatedAt = DateTime.UtcNow;
+
                             await itemizedProductRepository.UpdateAsync();
                         }                          
                     }
@@ -391,6 +439,8 @@ namespace Stone.Services.Implementation
                             itemizedServiceData.amount = item.amount;
                             itemizedServiceData.TotalValue = item.TotalValue;
                             //itemizedServiceData.BudgetId = item.BudgetId;
+                            itemizedServiceData.Active = item.Active;
+                            itemizedServiceData.CreateAt = item.CreateAt;
                             itemizedServiceData.UpdatedAt = DateTime.UtcNow;
                             await itemizedServiceRepository.UpdateAsync();
                         }

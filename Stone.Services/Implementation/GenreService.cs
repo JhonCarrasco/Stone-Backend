@@ -12,16 +12,12 @@ namespace Stone.Services.Implementation
     public class GenreService : IGenreService
     {
         private readonly IGenreRepository genreRepository;
-        private readonly ICustomerRepository customerRepository;
-        private readonly IPersonRepository personRepository;
         private readonly ILogger<IGenreService> logger;
         private readonly IMapper mapper;
 
-        public GenreService(ICustomerRepository customerRepository, IGenreRepository genreRepository, IPersonRepository personRepository, ILogger<IGenreService> logger, IMapper mapper)
+        public GenreService(IGenreRepository genreRepository, ILogger<IGenreService> logger, IMapper mapper)
         {            
             this.genreRepository = genreRepository;
-            this.customerRepository = customerRepository;
-            this.personRepository = personRepository;
             this.logger = logger;
             this.mapper = mapper;
         }
@@ -75,6 +71,7 @@ namespace Stone.Services.Implementation
             }
             return response;
         }
+       
         public async Task<BaseResponse> UpdateAsync(int id, GenreRequestDto request)
         {
             var response = new BaseResponse();

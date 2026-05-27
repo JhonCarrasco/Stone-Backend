@@ -4,5 +4,6 @@
     {
         public string Token { get; set; } = default!;
         public DateTime ExpirationDate { get; set; }
+        public UserResponseDto User { get; set; }
     }
 }
