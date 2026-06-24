@@ -2,6 +2,7 @@
 {
     public class ProductRequestDto
     {
+        public string? ProductCode { get; set; }
         public string Description { get; set; }
         public decimal? Long { get; set; }
         public decimal? Width { get; set; }

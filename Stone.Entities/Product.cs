@@ -4,6 +4,8 @@ namespace Stone.Entities
 {
     public class Product : EntityBase
     {
+        [Column("producto_codigo")]
+        public string? ProductCode { get; set; }
         [Column("descripcion")]
         public string Description { get; set; } = default!;
         [Column("largo", TypeName = "decimal(8,3)")]
