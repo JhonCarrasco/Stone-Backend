@@ -5,8 +5,6 @@ using Stone.Dto.Response;
 using Stone.Entities;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
-using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Stone.Services.Implementation
 {
@@ -76,6 +74,7 @@ namespace Stone.Services.Implementation
                         ManufacturerId = manufacturerMapper is not null ? manufacturerMapper.Id : null,
                         CategoryId = categoryMapper is not null ? categoryMapper.Id : null,
                         ProviderId = providerMapper is not null ? providerMapper.Id : null,
+                        ProductCode = data.ProductCode
                         //Manufacturer = manufacturerMapper,
                         //Category = categoryMapper
                     };
@@ -170,7 +169,8 @@ namespace Stone.Services.Implementation
                     ManufacturerName = manufacturerMapper.Description,
                     ManufacturerId = manufacturerMapper.Id,
                     CategoryName = categoryMapper is null ? null : categoryMapper.Description,
-                    CategoryId = categoryMapper is null ? null : categoryMapper.Id
+                    CategoryId = categoryMapper is null ? null : categoryMapper.Id,
+                    ProductCode = productData.ProductCode
                 };
                 //Mapear provider
                 var providerResponse = new ProviderResponseDto();
@@ -251,6 +251,7 @@ namespace Stone.Services.Implementation
                     ManufacturerId      = (int)request.ManufacturerId,
                     CategoryId          = request.CategoryId <= 0? null : request.CategoryId,
                     ProviderId          = request.ProviderId <= 0 ? null : request.ProviderId,
+                    ProductCode         = request.ProductCode
                 };
 
                 var productId = await productRepository.AddAsync(newProduct);
@@ -292,7 +293,8 @@ namespace Stone.Services.Implementation
                 productData.UnitValue       = request.UnitValue;
                 productData.ManufacturerId  = (int)request.ManufacturerId;
                 productData.CategoryId = request.CategoryId <= 0 ? null : request.CategoryId;
-                productData.ProviderId = request.ProviderId <= 0 ? null : request.ProviderId;               
+                productData.ProviderId = request.ProviderId <= 0 ? null : request.ProviderId;      
+                productData.ProductCode = request.ProductCode;
                 await productRepository.UpdateAsync();
 
                 response.Success = true;

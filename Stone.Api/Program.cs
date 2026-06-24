@@ -106,6 +106,10 @@ builder.Services.AddTransient<IRegionRepository, RegionRepository>();
 builder.Services.AddTransient<ITypeAccountRepository, TypeAccountRepository>();
 builder.Services.AddTransient<IUnitMeasurementRepository, UnitMeasurementRepository>();
 builder.Services.AddTransient<IProviderRepository, ProviderRepository>();
+builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
+builder.Services.AddTransient<IMaterialVoucherRepository, MaterialVoucherRepository>();
+builder.Services.AddTransient<IReceptionGuideRepository, ReceptionGuideRepository>();
+builder.Services.AddTransient<IDispatchGuideRepository, DispatchGuideRepository>();
 
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IConcertService, ConcertService>();
@@ -119,6 +123,10 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IBudgetService, BudgetService>();
 builder.Services.AddTransient<IProviderService, ProviderService>();
 builder.Services.AddTransient<ISharedService, SharedService>();
+builder.Services.AddTransient<IMaterialService, MaterialService>();
+builder.Services.AddTransient<IVoucherService, VoucherService>();
+builder.Services.AddTransient<IReceptionGuideService, ReceptionGuideService>();
+builder.Services.AddTransient<IDispatchGuideService, DispatchGuideService>();
 
 
 //if (StorageAzure)

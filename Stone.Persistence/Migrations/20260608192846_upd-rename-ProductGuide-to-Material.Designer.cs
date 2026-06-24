@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260608192846_upd-rename-ProductGuide-to-Material")]
+    partial class updrenameProductGuidetoMaterial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -624,6 +627,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("cliente_id");
 
+                    b.Property<DateTime?>("DispatchDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("fecha_despacho");
+
                     b.Property<int?>("DocumentType")
                         .HasColumnType("int")
                         .HasColumnName("tipo_documento");
@@ -634,13 +641,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("folio");
 
-                    b.Property<DateTime?>("GuideDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_despacho");
-
                     b.Property<int?>("LocationId")
-                        .HasColumnType("int")
-                        .HasColumnName("ubicacion_id");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Neto")
                         .HasColumnType("int")
@@ -757,7 +759,7 @@ namespace Stone.Persistence.Migrations
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
 
-                    b.ToTable("ConcertInfo", (string)null);
+                    b.ToTable("ConcertInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.Info.ReportInfo", b =>
@@ -770,7 +772,7 @@ namespace Stone.Persistence.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.ToTable("ReportInfo", (string)null);
+                    b.ToTable("ReportInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.ItemizedProduct", b =>
@@ -1015,6 +1017,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("despacho_id");
 
+                    b.Property<int?>("DocumentType")
+                        .HasColumnType("int")
+                        .HasColumnName("tipo_documento");
+
                     b.Property<int?>("MaterialVoucherId")
                         .HasColumnType("int");
 
@@ -1027,8 +1033,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("producto_id");
 
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("decimal(3,2)")
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int")
                         .HasColumnName("cantidad");
 
                     b.Property<int?>("ReceptionGuideId")
@@ -1066,7 +1072,7 @@ namespace Stone.Persistence.Migrations
 
                     b.HasIndex("ReceptionGuideId");
 
-                    b.ToTable("material", (string)null);
+                    b.ToTable("Material", (string)null);
                 });
 
             modelBuilder.Entity("Stone.Entities.MaterialVoucher", b =>
@@ -1333,10 +1339,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("folio");
 
-                    b.Property<DateTime?>("GuideDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_recepcion");
-
                     b.Property<int?>("Neto")
                         .HasColumnType("int")
                         .HasColumnName("neto");
@@ -1348,6 +1350,10 @@ namespace Stone.Persistence.Migrations
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int")
                         .HasColumnName("proveedor_id");
+
+                    b.Property<DateTime?>("ReceptionDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("fecha_recepcion");
 
                     b.Property<decimal?>("TaxRate")
                         .HasPrecision(10, 3)
@@ -1797,15 +1803,15 @@ namespace Stone.Persistence.Migrations
             modelBuilder.Entity("Stone.Entities.Material", b =>
                 {
                     b.HasOne("Stone.Entities.DispatchGuide", null)
-                        .WithMany("Materials")
+                        .WithMany("DispatchProducts")
                         .HasForeignKey("DispatchGuideId");
 
                     b.HasOne("Stone.Entities.MaterialVoucher", null)
-                        .WithMany("Materials")
+                        .WithMany("VoucherProducts")
                         .HasForeignKey("MaterialVoucherId");
 
                     b.HasOne("Stone.Entities.ReceptionGuide", null)
-                        .WithMany("Materials")
+                        .WithMany("ReceptionProducts")
                         .HasForeignKey("ReceptionGuideId");
                 });
 
@@ -1901,12 +1907,12 @@ namespace Stone.Persistence.Migrations
 
             modelBuilder.Entity("Stone.Entities.DispatchGuide", b =>
                 {
-                    b.Navigation("Materials");
+                    b.Navigation("DispatchProducts");
                 });
 
             modelBuilder.Entity("Stone.Entities.MaterialVoucher", b =>
                 {
-                    b.Navigation("Materials");
+                    b.Navigation("VoucherProducts");
                 });
 
             modelBuilder.Entity("Stone.Entities.Provider", b =>
@@ -1916,7 +1922,7 @@ namespace Stone.Persistence.Migrations
 
             modelBuilder.Entity("Stone.Entities.ReceptionGuide", b =>
                 {
-                    b.Navigation("Materials");
+                    b.Navigation("ReceptionProducts");
                 });
 #pragma warning restore 612, 618
         }

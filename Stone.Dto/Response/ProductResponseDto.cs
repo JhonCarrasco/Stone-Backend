@@ -8,6 +8,7 @@ namespace Stone.Dto.Response
         public bool Active { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? ProductCode { get; set; }
         public string Description { get; set; }
         public decimal? Long { get; set; }
         public decimal? Width { get; set; }

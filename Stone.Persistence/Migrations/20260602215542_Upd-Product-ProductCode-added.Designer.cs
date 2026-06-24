@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260602215542_Upd-Product-ProductCode-added")]
+    partial class UpdProductProductCodeadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -597,87 +600,6 @@ namespace Stone.Persistence.Migrations
                     b.ToTable("cliente", (string)null);
                 });
 
-            modelBuilder.Entity("Stone.Entities.DispatchGuide", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("activo");
-
-                    b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("fecha_creacion")
-                        .HasDefaultValueSql("(GETUTCDATE())");
-
-                    b.Property<int?>("CurrencyType")
-                        .HasColumnType("int")
-                        .HasColumnName("tipo_moneda");
-
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("cliente_id");
-
-                    b.Property<int?>("DocumentType")
-                        .HasColumnType("int")
-                        .HasColumnName("tipo_documento");
-
-                    b.Property<string>("Folio")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("folio");
-
-                    b.Property<DateTime?>("GuideDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_despacho");
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int")
-                        .HasColumnName("ubicacion_id");
-
-                    b.Property<int?>("Neto")
-                        .HasColumnType("int")
-                        .HasColumnName("neto");
-
-                    b.Property<string>("Observations")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("observaciones");
-
-                    b.Property<int?>("ProviderId")
-                        .HasColumnType("int")
-                        .HasColumnName("proveedor_id");
-
-                    b.Property<decimal?>("TaxRate")
-                        .HasPrecision(10, 3)
-                        .HasColumnType("decimal(3,2)")
-                        .HasColumnName("iva");
-
-                    b.Property<int?>("TotalValue")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_total");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_actualizacion");
-
-                    b.Property<int?>("ValueCurrency")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_moneda");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("guia_despacho", (string)null);
-                });
-
             modelBuilder.Entity("Stone.Entities.Genre", b =>
                 {
                     b.Property<int>("Id")
@@ -757,7 +679,7 @@ namespace Stone.Persistence.Migrations
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
 
-                    b.ToTable("ConcertInfo", (string)null);
+                    b.ToTable("ConcertInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.Info.ReportInfo", b =>
@@ -770,7 +692,7 @@ namespace Stone.Persistence.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.ToTable("ReportInfo", (string)null);
+                    b.ToTable("ReportInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.ItemizedProduct", b =>
@@ -983,138 +905,6 @@ namespace Stone.Persistence.Migrations
                     b.ToTable("fabricante", (string)null);
                 });
 
-            modelBuilder.Entity("Stone.Entities.Material", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("activo");
-
-                    b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("fecha_creacion")
-                        .HasDefaultValueSql("(GETUTCDATE())");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("descripcion");
-
-                    b.Property<int?>("DispatchGuideId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DispatchId")
-                        .HasColumnType("int")
-                        .HasColumnName("despacho_id");
-
-                    b.Property<int?>("MaterialVoucherId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("producto_codigo");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int")
-                        .HasColumnName("producto_id");
-
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("decimal(3,2)")
-                        .HasColumnName("cantidad");
-
-                    b.Property<int?>("ReceptionGuideId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReceptionId")
-                        .HasColumnType("int")
-                        .HasColumnName("recepcion_id");
-
-                    b.Property<int?>("TotalValue")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_total");
-
-                    b.Property<int?>("UnitMeasurement")
-                        .HasColumnType("int")
-                        .HasColumnName("unidad_medida");
-
-                    b.Property<int?>("UnitValue")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_unitario");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_actualizacion");
-
-                    b.Property<int?>("VoucherId")
-                        .HasColumnType("int")
-                        .HasColumnName("voucher_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DispatchGuideId");
-
-                    b.HasIndex("MaterialVoucherId");
-
-                    b.HasIndex("ReceptionGuideId");
-
-                    b.ToTable("material", (string)null);
-                });
-
-            modelBuilder.Entity("Stone.Entities.MaterialVoucher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("activo");
-
-                    b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("fecha_creacion")
-                        .HasDefaultValueSql("(GETUTCDATE())");
-
-                    b.Property<string>("Observations")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("observaciones");
-
-                    b.Property<string>("ProjectTo")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("proyecto");
-
-                    b.Property<string>("SupplierTo")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("nombre_persona");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_actualizacion");
-
-                    b.Property<int?>("budgetId")
-                        .HasColumnType("int")
-                        .HasColumnName("presupuesto_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("cupon_material", (string)null);
-                });
-
             modelBuilder.Entity("Stone.Entities.Person", b =>
                 {
                     b.Property<int>("Id")
@@ -1291,84 +1081,6 @@ namespace Stone.Persistence.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("proveedor", (string)null);
-                });
-
-            modelBuilder.Entity("Stone.Entities.ReceptionGuide", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit")
-                        .HasColumnName("activo");
-
-                    b.Property<DateTime?>("CreateAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("fecha_creacion")
-                        .HasDefaultValueSql("(GETUTCDATE())");
-
-                    b.Property<int>("CurrencyType")
-                        .HasColumnType("int")
-                        .HasColumnName("tipo_moneda");
-
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("cliente_id");
-
-                    b.Property<int?>("DocumentType")
-                        .HasColumnType("int")
-                        .HasColumnName("tipo_documento");
-
-                    b.Property<string>("File")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Folio")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasColumnName("folio");
-
-                    b.Property<DateTime?>("GuideDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_recepcion");
-
-                    b.Property<int?>("Neto")
-                        .HasColumnType("int")
-                        .HasColumnName("neto");
-
-                    b.Property<string>("Observations")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("observaciones");
-
-                    b.Property<int?>("ProviderId")
-                        .HasColumnType("int")
-                        .HasColumnName("proveedor_id");
-
-                    b.Property<decimal?>("TaxRate")
-                        .HasPrecision(10, 3)
-                        .HasColumnType("decimal(3,2)")
-                        .HasColumnName("iva");
-
-                    b.Property<int?>("TotalValue")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_total");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("fecha_actualizacion");
-
-                    b.Property<int?>("ValueCurrency")
-                        .HasColumnType("int")
-                        .HasColumnName("valor_moneda");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("guia_recepcion", (string)null);
                 });
 
             modelBuilder.Entity("Stone.Entities.Region", b =>
@@ -1746,15 +1458,6 @@ namespace Stone.Persistence.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Stone.Entities.DispatchGuide", b =>
-                {
-                    b.HasOne("Stone.Entities.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Stone.Entities.ItemizedProduct", b =>
                 {
                     b.HasOne("Stone.Entities.Budget", "Budget")
@@ -1792,21 +1495,6 @@ namespace Stone.Persistence.Migrations
                     b.Navigation("Commune");
 
                     b.Navigation("Region");
-                });
-
-            modelBuilder.Entity("Stone.Entities.Material", b =>
-                {
-                    b.HasOne("Stone.Entities.DispatchGuide", null)
-                        .WithMany("Materials")
-                        .HasForeignKey("DispatchGuideId");
-
-                    b.HasOne("Stone.Entities.MaterialVoucher", null)
-                        .WithMany("Materials")
-                        .HasForeignKey("MaterialVoucherId");
-
-                    b.HasOne("Stone.Entities.ReceptionGuide", null)
-                        .WithMany("Materials")
-                        .HasForeignKey("ReceptionGuideId");
                 });
 
             modelBuilder.Entity("Stone.Entities.Product", b =>
@@ -1899,24 +1587,9 @@ namespace Stone.Persistence.Migrations
                     b.Navigation("Contacts");
                 });
 
-            modelBuilder.Entity("Stone.Entities.DispatchGuide", b =>
-                {
-                    b.Navigation("Materials");
-                });
-
-            modelBuilder.Entity("Stone.Entities.MaterialVoucher", b =>
-                {
-                    b.Navigation("Materials");
-                });
-
             modelBuilder.Entity("Stone.Entities.Provider", b =>
                 {
                     b.Navigation("Contacts");
-                });
-
-            modelBuilder.Entity("Stone.Entities.ReceptionGuide", b =>
-                {
-                    b.Navigation("Materials");
                 });
 #pragma warning restore 612, 618
         }

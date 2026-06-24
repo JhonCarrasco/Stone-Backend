@@ -20,5 +20,6 @@ namespace Stone.Dto.Response
 
         public ICollection<ContactResponseDto>? Contacts { get; set; }
 
+        
     }
 }

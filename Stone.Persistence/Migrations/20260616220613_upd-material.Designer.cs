@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616220613_upd-material")]
+    partial class updmaterial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -639,8 +642,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_despacho");
 
                     b.Property<int?>("LocationId")
-                        .HasColumnType("int")
-                        .HasColumnName("ubicacion_id");
+                        .HasColumnType("int");
 
                     b.Property<int?>("Neto")
                         .HasColumnType("int")
@@ -757,7 +759,7 @@ namespace Stone.Persistence.Migrations
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
 
-                    b.ToTable("ConcertInfo", (string)null);
+                    b.ToTable("ConcertInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.Info.ReportInfo", b =>
@@ -770,7 +772,7 @@ namespace Stone.Persistence.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
-                    b.ToTable("ReportInfo", (string)null);
+                    b.ToTable("ReportInfo");
                 });
 
             modelBuilder.Entity("Stone.Entities.ItemizedProduct", b =>
