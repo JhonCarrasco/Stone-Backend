@@ -11,7 +11,7 @@ namespace Stone.Entities
         [Column("observaciones")]
         public string? Observations { get; set; }
         [Column("tipo_moneda")]
-        public int? CurrencyType { get; set; }
+        public string? CurrencyType { get; set; }
         [Column("valor_moneda")]
         public int? ValueCurrency { get; set; }
         [Column("proveedor_id")]
@@ -23,16 +23,16 @@ namespace Stone.Entities
         [Column("iva", TypeName = "decimal(3,2)")]
         public decimal? TaxRate { get; set; }
         [Column("valor_total")]
-        public int? TotalValue { get; set; }
-        public virtual ICollection<Material>? Materials { get; set; }
-
+        public int? TotalValue { get; set; }       
         [Column("ubicacion_id")]
         public int? LocationId { get; set; }
-        public virtual Location? Location { get; set; }
         [Column("fecha_despacho")]
         public DateTime? GuideDate { get; set; }
+        public virtual ICollection<Material>? Materials { get; set; }
 
-        
+        public virtual Customer? Customer { get; set; }
+        public virtual Provider? Provider { get; set; }
+
 
     }
 }

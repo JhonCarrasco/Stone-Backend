@@ -12,7 +12,7 @@ namespace Stone.Dto.Request
         public string? Folio { get; set; }        
         public int? DocumentType { get; set; }//FX, Guia
         public string? Observations { get; set; }
-        public int? CurrencyType { get; set; } // tipo de moneda
+        public string? CurrencyType { get; set; } // tipo de moneda
         public int? ValueCurrency { get; set; } // valor moneda
         public int? ProviderId { get; set; }
         public int? CustomerId { get; set; }

@@ -6,12 +6,7 @@ using Stone.Persistence;
 using Stone.Repositories.Implements;
 using Stone.Repositories.Interface;
 using Stone.Repositories.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stone.Repositories.Implementation
 {
@@ -27,6 +22,7 @@ namespace Stone.Repositories.Implementation
         {
             //eager loading approach optimizado
             var queryable = context.Set<MaterialVoucher>()
+                .Include(x => x.Budget)
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()

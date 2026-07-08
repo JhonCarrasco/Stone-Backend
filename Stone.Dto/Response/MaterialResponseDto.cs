@@ -12,7 +12,7 @@ namespace Stone.Dto.Response
         public string Folio { get; set; }
         public int? DocumentType { get; set; }//FX, Guia
         public string? Observations { get; set; }
-        public int? CurrencyType { get; set; }
+        public string? CurrencyType { get; set; }
         public int? ValueCurrency { get; set; }
         //public int? ProviderId { get; set; }
         //public int? CustomerId { get; set; }
@@ -31,9 +31,9 @@ namespace Stone.Dto.Response
         public string? ProjectTo { get; set; }
         public int? BudgetId { get; set; }
         public string? File { get; set; } //TODO: Cambiar a tipo de dato adecuado para archivos (e.g., IFormFile)
-        public int? LocationId { get; set; }
         public string? Address { get; set; }
         public string? Zone { get; set; }
-        
+
+        public BudgetResponseDto? Budget { get; set; }
     }
 }
