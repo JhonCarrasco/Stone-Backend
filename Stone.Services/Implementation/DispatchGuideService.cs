@@ -45,7 +45,7 @@ namespace Stone.Services.Implementation
                     Folio = request.Folio,
                     DocumentType = request.DocumentType,
                     Observations = request.Observations,
-                    CurrencyType = (int)request.CurrencyType,
+                    CurrencyType = request.CurrencyType!.ToUpper(),
                     ValueCurrency = request.ValueCurrency,
                     ProviderId = request.ProviderId,
                     CustomerId = request.CustomerId,
@@ -119,9 +119,15 @@ namespace Stone.Services.Implementation
             var response = new BaseResponseGeneric<ICollection<MaterialResponseDto>>();
             try
             {
-                var EntityList = await _dispatchGuideRepository.GetAsync(predicate: s => s.Observations.Contains(searchText ?? string.Empty),
-                    orderBy: x => x.Id,
-                    pagination);
+                var EntityList = await _dispatchGuideRepository.GetAsync(predicate: s => s.Observations!.Contains(searchText ?? string.Empty)
+                    || s.Folio.Contains(searchText ?? string.Empty)
+                    || s.Customer!.Email.Contains(searchText ?? string.Empty)
+                    || s.Customer!.Person!.DisplayName.Contains(searchText ?? string.Empty)
+                    || s.Customer!.Person!.Rut.Contains(searchText ?? string.Empty)
+                    || s.Provider!.Person!.DisplayName.Contains(searchText ?? string.Empty)
+                    || s.Provider!.Person!.Rut.Contains(searchText ?? string.Empty)
+                    , orderBy: x => x.Id
+                    ,pagination);
 
                 if (EntityList == null)
                 {
@@ -141,8 +147,8 @@ namespace Stone.Services.Implementation
                         return response;
                     }
 
-                    var customerResponse = await _customerService.GetAsync((int)EntityData.CustomerId!);
-                    var providerResponse = await _providerService.GetAsync((int)EntityData.ProviderId!);
+                    var customerMapper = _mapper.Map<Customer>(EntityData.Customer);
+                    var providerMapper = _mapper.Map<Provider>(EntityData.Provider);
                     var materialListEntity = await _materialRepository.GetByDispatchIdAsync(EntityData.Id);
 
                     var materialResponse = new MaterialResponseDto
@@ -154,13 +160,12 @@ namespace Stone.Services.Implementation
                         Folio = EntityData.Folio,
                         DocumentType = EntityData.DocumentType,
                         Observations = EntityData.Observations,
-                        CurrencyType = EntityData.CurrencyType,
+                        CurrencyType = EntityData.CurrencyType!.ToUpper(),
                         ValueCurrency = EntityData.ValueCurrency,
                         Neto = EntityData.Neto,
                         TaxRate = EntityData.TaxRate,
                         TotalValue = EntityData.TotalValue,
-                        GuideDate = EntityData.GuideDate,
-                        LocationId = EntityData.LocationId
+                        GuideDate = EntityData.GuideDate
                     };
 
                     if (materialListEntity != null && materialListEntity.Count > 0)
@@ -185,31 +190,31 @@ namespace Stone.Services.Implementation
                         }
                     }
 
-                    if (customerResponse.Data is not null && customerResponse.Success)
+                    if (customerMapper is not null)
                     {
                         materialResponse.Customer = new CustomerResponseDto
                         {
-                            Id = customerResponse.Data.Id,
-                            Rut = customerResponse.Data.Rut,
-                            Email = customerResponse.Data.Email,
-                            DisplayName = customerResponse.Data.DisplayName,
-                            Phone = customerResponse.Data.Phone
+                            Id = customerMapper.Id,
+                            Rut = customerMapper.Rut,
+                            Email = customerMapper.Email,
+                            DisplayName = customerMapper.DisplayName,
+                            Phone = customerMapper.Phone
                         };
                     }
 
-                    if (providerResponse.Data is not null && providerResponse.Success)
+                    if (providerMapper is not null)
                     {
                         materialResponse.Provider = new ProviderResponseDto
                         {
-                            Id = providerResponse.Data.Id,
-                            Active = providerResponse.Data.Active,
-                            PersonName = providerResponse.Data.PersonName,
-                            PersonId = providerResponse.Data.PersonId,
-                            LocationId = providerResponse.Data.LocationId,
-                            BankAccountId = providerResponse.Data.BankAccountId,
-                            CreateAt = providerResponse.Data.CreateAt,
-                            UpdatedAt = providerResponse.Data.UpdatedAt,
-                            Contacts = null
+                            Id = providerMapper.Id,
+                            Active = providerMapper.Active,
+                            PersonName = providerMapper.Person!.DisplayName,
+                            PersonId = providerMapper.Person.Id,
+                            LocationId = providerMapper.LocationId,
+                            BankAccountId = providerMapper.BankAccountId,
+                            CreateAt = providerMapper.CreateAt,
+                            UpdatedAt = providerMapper.UpdatedAt,
+                            Contacts = null //TODO: Implementar mapeo de contactos si es necesario
                         };
                     }
 
@@ -238,8 +243,8 @@ namespace Stone.Services.Implementation
                     return response;
                 }
 
-                var customerResponse = await _customerService.GetAsync((int)EntityData.CustomerId!);
-                var providerResponse = await _providerService.GetAsync((int)EntityData.ProviderId!);
+                var customerMapper = _mapper.Map<Customer>(EntityData.Customer);
+                var providerMapper = _mapper.Map<Provider>(EntityData.Provider);
                 var materialListEntity = await _materialRepository.GetAsync(predicate: s => s.ReceptionId == id,
                     orderBy: x => x.Id,
                     pagination: new PaginationDto { OffSet = 0, Limit = 100 });
@@ -253,13 +258,12 @@ namespace Stone.Services.Implementation
                     Folio = EntityData.Folio,
                     DocumentType = EntityData.DocumentType,
                     Observations = EntityData.Observations,
-                    CurrencyType = EntityData.CurrencyType,
+                    CurrencyType = EntityData.CurrencyType!.ToUpper(),
                     ValueCurrency = EntityData.ValueCurrency,
                     Neto = EntityData.Neto,
                     TaxRate = EntityData.TaxRate,
                     TotalValue = EntityData.TotalValue,
-                    GuideDate = EntityData.GuideDate,
-                    LocationId = EntityData.LocationId
+                    GuideDate = EntityData.GuideDate
                 };
 
                 if (materialListEntity is not null && materialListEntity.Count > 0)
@@ -284,31 +288,31 @@ namespace Stone.Services.Implementation
                     }
                 }
 
-                if (customerResponse.Data is not null && customerResponse.Success)
+                if (customerMapper is not null)
                 {
                     materialResponse.Customer = new CustomerResponseDto
                     {
-                        Id = customerResponse.Data.Id,
-                        Rut = customerResponse.Data.Rut,
-                        Email = customerResponse.Data.Email,
-                        DisplayName = customerResponse.Data.DisplayName,
-                        Phone = customerResponse.Data.Phone
+                        Id = customerMapper.Id,
+                        Rut = customerMapper.Rut,
+                        Email = customerMapper.Email,
+                        DisplayName = customerMapper.DisplayName,
+                        Phone = customerMapper.Phone
                     };
                 }
 
-                if (providerResponse.Data is not null && providerResponse.Success)
+                if (providerMapper is not null)
                 {
                     materialResponse.Provider = new ProviderResponseDto
                     {
-                        Id = providerResponse.Data.Id,
-                        Active = providerResponse.Data.Active,
-                        PersonName = providerResponse.Data.PersonName,
-                        PersonId = providerResponse.Data.PersonId,
-                        LocationId = providerResponse.Data.LocationId,
-                        BankAccountId = providerResponse.Data.BankAccountId,
-                        CreateAt = providerResponse.Data.CreateAt,
-                        UpdatedAt = providerResponse.Data.UpdatedAt,
-                        Contacts = null
+                        Id = providerMapper.Id,
+                        Active = providerMapper.Active,
+                        PersonName = providerMapper.Person!.DisplayName,
+                        PersonId = providerMapper.Person.Id,
+                        LocationId = providerMapper.LocationId,
+                        BankAccountId = providerMapper.BankAccountId,
+                        CreateAt = providerMapper.CreateAt,
+                        UpdatedAt = providerMapper.UpdatedAt,
+                        Contacts = null //TODO: Implementar mapeo de contactos si es necesario
                     };
                 }
 
@@ -340,7 +344,7 @@ namespace Stone.Services.Implementation
                 dispatchData.Folio = request.Folio;
                 dispatchData.DocumentType = request.DocumentType;
                 dispatchData.Observations = request.Observations;
-                dispatchData.CurrencyType = (int)request.CurrencyType;
+                dispatchData.CurrencyType = request.CurrencyType!.ToUpper();
                 dispatchData.ValueCurrency = request.ValueCurrency;
                 dispatchData.ProviderId = request.ProviderId;
                 dispatchData.CustomerId = request.CustomerId;

@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
-using Stone.Repositories.Implementation;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
 
@@ -33,9 +32,13 @@ namespace Stone.Services.Implementation
             var response = new BaseResponseGeneric<ICollection<MaterialResponseDto>>();
             try
             {
-                var EntityList = await _voucherRepository.GetAsync(predicate: s => s.Observations.Contains(searchText ?? string.Empty),
-                    orderBy: x => x.Id,
-                    pagination);
+                var EntityList = await _voucherRepository.GetAsync(predicate: s => s.Observations!.Contains(searchText ?? string.Empty)
+                    || s.SupplierTo.Contains(searchText ?? string.Empty)
+                    || s.ProjectTo!.Contains(searchText ?? string.Empty)
+                    || s.Budget!.Customer!.DisplayName.Contains(searchText ?? string.Empty)
+                    || s.Budget!.Description!.Contains(searchText ?? string.Empty)
+                    ,orderBy: x => x.Id
+                    ,pagination);
 
                 if (EntityList == null)
                 {
@@ -55,8 +58,6 @@ namespace Stone.Services.Implementation
                         return response;
                     }
 
-                    //var customerResponse = await _customerService.GetAsync((int)EntityData.CustomerId!);
-                    //var providerResponse = await _providerService.GetAsync((int)EntityData.ProviderId!);
                     var materialListEntity = await _materialRepository.GetByReceptionIdAsync(EntityData.Id);
 
                     var materialResponse = new MaterialResponseDto
@@ -146,9 +147,10 @@ namespace Stone.Services.Implementation
                     return response;
                 }
 
-                var materialListEntity = await _materialRepository.GetAsync(predicate: s => s.VoucherId == id,
-                    orderBy: x => x.Id,
-                    pagination: new PaginationDto { OffSet = 0, Limit = 100 });
+                var budgetMapper = _mapper.Map<Budget>(EntityData.Budget);
+                var materialListEntity = await _materialRepository.GetAsync(predicate: s => s.VoucherId == id
+                    ,orderBy: x => x.Id
+                    ,pagination: new PaginationDto { OffSet = 0, Limit = 100 });
 
                 var materialResponse = new MaterialResponseDto
                 {
@@ -182,6 +184,30 @@ namespace Stone.Services.Implementation
                         };
                         materialResponse.Materials.Add(materialItem);
                     }
+                }
+
+                if (budgetMapper is not null)
+                {
+                    materialResponse.Budget = new BudgetResponseDto
+                    {
+                        Id = budgetMapper.Id,
+                        Active = budgetMapper.Active,
+                        CreateAt = budgetMapper.CreateAt,
+                        UpdatedAt = budgetMapper.UpdatedAt,
+                        ProjectName = budgetMapper.ProjectName,
+                        Address = budgetMapper.Address,
+                        Description = budgetMapper.Description,
+                        Material = budgetMapper.Material,
+                        SubTotal = budgetMapper.SubTotal,
+                        Neto = budgetMapper.Neto,
+                        TaxRate = budgetMapper.TaxRate,
+                        TotalValue = budgetMapper.TotalValue,
+                        CustomerId = budgetMapper.CustomerId,
+                        State = budgetMapper.State,
+                        Zone = budgetMapper.Zone,
+                        ContactPerson = budgetMapper.ContactPerson,
+                        PhoneContact = budgetMapper.PhoneContact
+                    };
                 }
 
                 response.Data = materialResponse;

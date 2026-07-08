@@ -10,7 +10,7 @@ namespace Stone.Persistence.Configurations
         {
             builder.Property(x => x.ProductCode).HasMaxLength(200);
             builder.Property(x => x.Description).HasMaxLength(200);
-            builder.HasQueryFilter(x => x.Active);
+            //builder.HasQueryFilter(x => x.Active);
 
             builder.ToTable("material");
 

@@ -12,7 +12,7 @@ namespace Stone.Dto.Request
 
         public string? ProductCode { get; set; }
         public string Description { get; set; }
-        public int? UnitMeasurement { get; set; }
+        public string? UnitMeasurement { get; set; }
         public decimal? Quantity { get; set; }
         public int? UnitValue { get; set; }
         public int? TotalValue { get; set; }

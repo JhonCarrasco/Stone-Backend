@@ -17,7 +17,7 @@ namespace Stone.Repositories.Implementation
         public MaterialRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor) : base(context)
         {
             this.httpContextAccessor = httpContextAccessor;
-        }
+        }           
 
         public async Task<ICollection<Material>?> GetAsync<TKey>(Expression<Func<Material, bool>> predicate, Expression<Func<Material, TKey>> orderBy, PaginationDto pagination)
         {
@@ -70,5 +70,6 @@ namespace Stone.Repositories.Implementation
             var response = await queryable.ToListAsync();
             return response;
         }
+        
     }
 }

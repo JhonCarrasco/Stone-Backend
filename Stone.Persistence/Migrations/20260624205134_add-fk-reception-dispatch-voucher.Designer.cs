@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260624205134_add-fk-reception-dispatch-voucher")]
+    partial class addfkreceptiondispatchvoucher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -616,8 +619,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_creacion")
                         .HasDefaultValueSql("(GETUTCDATE())");
 
-                    b.Property<string>("CurrencyType")
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int?>("CurrencyType")
+                        .HasColumnType("int")
                         .HasColumnName("tipo_moneda");
 
                     b.Property<int?>("CustomerId")
@@ -1044,8 +1047,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("int")
                         .HasColumnName("valor_total");
 
-                    b.Property<string>("UnitMeasurement")
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int?>("UnitMeasurement")
+                        .HasColumnType("int")
                         .HasColumnName("unidad_medida");
 
                     b.Property<int?>("UnitValue")
@@ -1316,8 +1319,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_creacion")
                         .HasDefaultValueSql("(GETUTCDATE())");
 
-                    b.Property<string>("CurrencyType")
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int>("CurrencyType")
+                        .HasColumnType("int")
                         .HasColumnName("tipo_moneda");
 
                     b.Property<int?>("CustomerId")

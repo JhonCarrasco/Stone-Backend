@@ -11,7 +11,7 @@ namespace Stone.Entities
         [Column("observaciones")]
         public string? Observations { get; set; }
         [Column("tipo_moneda")]
-        public int CurrencyType { get; set; }
+        public string? CurrencyType { get; set; }
         [Column("valor_moneda")]
         public int? ValueCurrency { get; set; }
         [Column("proveedor_id")]
@@ -32,6 +32,7 @@ namespace Stone.Entities
         public DateTime? GuideDate { get; set; }
 
         public virtual Customer? Customer { get; set; }
+        public virtual Provider? Provider { get; set; }
 
     }
 }

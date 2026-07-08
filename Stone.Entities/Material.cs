@@ -9,7 +9,7 @@ namespace Stone.Entities
         [Column("descripcion")]
         public string Description { get; set; }
         [Column("unidad_medida")]
-        public int? UnitMeasurement { get; set; }
+        public string? UnitMeasurement { get; set; }
         [Column("cantidad", TypeName = "decimal(3,2)")]
         public decimal? Quantity { get; set; }
         [Column("valor_unitario")]

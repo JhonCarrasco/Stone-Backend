@@ -11,9 +11,9 @@ namespace Stone.Entities
         [Column("proyecto")]
         public string? ProjectTo { get; set; }
         [Column("presupuesto_id")]
-        public int? BudgetId { get; set; }
-        
-
+        public int? BudgetId { get; set; }        
         public virtual ICollection<Material>? Materials { get; set; }
+
+        public virtual Budget? Budget { get; set; }
     }
 }

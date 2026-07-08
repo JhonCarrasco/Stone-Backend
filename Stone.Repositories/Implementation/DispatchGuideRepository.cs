@@ -22,6 +22,8 @@ namespace Stone.Repositories.Implementation
         {
             //eager loading approach optimizado
             var queryable = context.Set<DispatchGuide>()
+                .Include(x => x.Customer)
+                .Include(x => x.Provider)
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()
