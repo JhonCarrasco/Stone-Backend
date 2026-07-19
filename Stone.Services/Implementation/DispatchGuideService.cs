@@ -45,15 +45,18 @@ namespace Stone.Services.Implementation
                     Folio = request.Folio,
                     DocumentType = request.DocumentType,
                     Observations = request.Observations,
-                    CurrencyType = request.CurrencyType!.ToUpper(),
+                    CurrencyType = request.CurrencyType,
                     ValueCurrency = request.ValueCurrency,
                     ProviderId = request.ProviderId,
                     CustomerId = request.CustomerId,
                     Neto = request.Neto,
-                    TaxRate = request.TaxRate,
+                    TaxRate = (request.TaxRate / 100),
                     TotalValue = request.TotalValue,
                     GuideDate = request.GuideDate,
-                    LocationId = request.LocationId
+                    Address = request.Address,
+                    Commune = request.Commune,
+                    Zone = request.Zone,
+
                     //File = request.File
                 };
 
@@ -69,7 +72,7 @@ namespace Stone.Services.Implementation
                         {
                             ProductCode = item.ProductCode,
                             Description = item.Description,
-                            UnitMeasurement = item.UnitMeasurement,
+                            UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                             Quantity = item.Quantity,
                             UnitValue = item.UnitValue,
                             TotalValue = item.TotalValue,
@@ -160,12 +163,15 @@ namespace Stone.Services.Implementation
                         Folio = EntityData.Folio,
                         DocumentType = EntityData.DocumentType,
                         Observations = EntityData.Observations,
-                        CurrencyType = EntityData.CurrencyType!.ToUpper(),
+                        CurrencyType = EntityData.CurrencyType,
                         ValueCurrency = EntityData.ValueCurrency,
                         Neto = EntityData.Neto,
                         TaxRate = EntityData.TaxRate,
                         TotalValue = EntityData.TotalValue,
-                        GuideDate = EntityData.GuideDate
+                        GuideDate = EntityData.GuideDate,
+                        Address = EntityData.Address,
+                        Commune = EntityData.Commune,
+                        Zone = EntityData.Zone
                     };
 
                     if (materialListEntity != null && materialListEntity.Count > 0)
@@ -179,7 +185,7 @@ namespace Stone.Services.Implementation
                                 Active = item.Active,
                                 ProductCode = item.ProductCode,
                                 Description = item.Description,
-                                UnitMeasurement = item.UnitMeasurement,
+                                UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                                 Quantity = item.Quantity,
                                 UnitValue = item.UnitValue,
                                 TotalValue = item.TotalValue,
@@ -210,6 +216,7 @@ namespace Stone.Services.Implementation
                             Active = providerMapper.Active,
                             PersonName = providerMapper.Person!.DisplayName,
                             PersonId = providerMapper.Person.Id,
+                            PersonRut = providerMapper.Person.Rut,
                             LocationId = providerMapper.LocationId,
                             BankAccountId = providerMapper.BankAccountId,
                             CreateAt = providerMapper.CreateAt,
@@ -245,7 +252,7 @@ namespace Stone.Services.Implementation
 
                 var customerMapper = _mapper.Map<Customer>(EntityData.Customer);
                 var providerMapper = _mapper.Map<Provider>(EntityData.Provider);
-                var materialListEntity = await _materialRepository.GetAsync(predicate: s => s.ReceptionId == id,
+                var materialListEntity = await _materialRepository.GetAsync(predicate: s => s.DispatchId == id,
                     orderBy: x => x.Id,
                     pagination: new PaginationDto { OffSet = 0, Limit = 100 });
 
@@ -258,12 +265,15 @@ namespace Stone.Services.Implementation
                     Folio = EntityData.Folio,
                     DocumentType = EntityData.DocumentType,
                     Observations = EntityData.Observations,
-                    CurrencyType = EntityData.CurrencyType!.ToUpper(),
+                    CurrencyType = EntityData.CurrencyType,
                     ValueCurrency = EntityData.ValueCurrency,
                     Neto = EntityData.Neto,
                     TaxRate = EntityData.TaxRate,
                     TotalValue = EntityData.TotalValue,
-                    GuideDate = EntityData.GuideDate
+                    GuideDate = EntityData.GuideDate,
+                    Address = EntityData.Address,
+                    Commune = EntityData.Commune,
+                    Zone = EntityData.Zone
                 };
 
                 if (materialListEntity is not null && materialListEntity.Count > 0)
@@ -277,7 +287,7 @@ namespace Stone.Services.Implementation
                             Active = item.Active,
                             ProductCode = item.ProductCode,
                             Description = item.Description,
-                            UnitMeasurement = item.UnitMeasurement,
+                            UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                             Quantity = item.Quantity,
                             UnitValue = item.UnitValue,
                             TotalValue = item.TotalValue,
@@ -308,6 +318,7 @@ namespace Stone.Services.Implementation
                         Active = providerMapper.Active,
                         PersonName = providerMapper.Person!.DisplayName,
                         PersonId = providerMapper.Person.Id,
+                        PersonRut = providerMapper.Person.Rut,
                         LocationId = providerMapper.LocationId,
                         BankAccountId = providerMapper.BankAccountId,
                         CreateAt = providerMapper.CreateAt,
@@ -341,18 +352,21 @@ namespace Stone.Services.Implementation
                 }
 
                 //Actualizar valores
+                dispatchData.UpdatedAt = DateTime.UtcNow;
                 dispatchData.Folio = request.Folio;
                 dispatchData.DocumentType = request.DocumentType;
                 dispatchData.Observations = request.Observations;
-                dispatchData.CurrencyType = request.CurrencyType!.ToUpper();
+                dispatchData.CurrencyType = request.CurrencyType;
                 dispatchData.ValueCurrency = request.ValueCurrency;
                 dispatchData.ProviderId = request.ProviderId;
                 dispatchData.CustomerId = request.CustomerId;
                 dispatchData.Neto = request.Neto;
-                dispatchData.TaxRate = request.TaxRate;
+                dispatchData.TaxRate = request.TaxRate / 100;
                 dispatchData.TotalValue = request.TotalValue;
                 dispatchData.GuideDate = request.GuideDate;
-                dispatchData.LocationId = request.LocationId;
+                dispatchData.Address = request.Address;
+                dispatchData.Commune = request.Commune;
+                dispatchData.Zone = request.Zone;
                 //dispatchData.File = request.File;
 
                 await _dispatchGuideRepository.UpdateAsync();
@@ -369,7 +383,7 @@ namespace Stone.Services.Implementation
                             {
                                 ProductCode = item.ProductCode,
                                 Description = item.Description,
-                                UnitMeasurement = item.UnitMeasurement,
+                                UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                                 Quantity = item.Quantity,
                                 UnitValue = item.UnitValue,
                                 TotalValue = item.TotalValue,
@@ -384,7 +398,7 @@ namespace Stone.Services.Implementation
                             //Actualizar item material
                             itemMaterialData!.ProductCode = item.ProductCode;
                             itemMaterialData!.Description = item.Description;
-                            itemMaterialData!.UnitMeasurement = item.UnitMeasurement;
+                            itemMaterialData!.UnitMeasurement = item.UnitMeasurement!.ToUpper();
                             itemMaterialData!.Quantity = item.Quantity;
                             itemMaterialData!.UnitValue = item.UnitValue;
                             itemMaterialData!.TotalValue = item.TotalValue;

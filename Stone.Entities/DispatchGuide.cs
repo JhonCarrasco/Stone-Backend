@@ -11,21 +11,25 @@ namespace Stone.Entities
         [Column("observaciones")]
         public string? Observations { get; set; }
         [Column("tipo_moneda")]
-        public string? CurrencyType { get; set; }
-        [Column("valor_moneda")]
-        public int? ValueCurrency { get; set; }
+        public int? CurrencyType { get; set; }
+        [Column("valor_moneda", TypeName = "decimal(10,2)")]
+        public decimal? ValueCurrency { get; set; }
         [Column("proveedor_id")]
         public int? ProviderId { get; set; }
         [Column("cliente_id")]
         public int? CustomerId { get; set; }
-        [Column("neto")]
-        public int? Neto { get; set; }
-        [Column("iva", TypeName = "decimal(3,2)")]
+        [Column("neto", TypeName = "decimal(10,2)")]
+        public decimal? Neto { get; set; }
+        [Column("iva", TypeName = "decimal(10,2)")]
         public decimal? TaxRate { get; set; }
-        [Column("valor_total")]
-        public int? TotalValue { get; set; }       
-        [Column("ubicacion_id")]
-        public int? LocationId { get; set; }
+        [Column("valor_total", TypeName = "decimal(10,2)")]
+        public decimal? TotalValue { get; set; }       
+        [Column("direccion")]
+        public string? Address { get; set; }
+        [Column("comuna_id")]
+        public int? Commune { get; set; }
+        [Column("zona")]
+        public int? Zone { get; set; }
         [Column("fecha_despacho")]
         public DateTime? GuideDate { get; set; }
         public virtual ICollection<Material>? Materials { get; set; }

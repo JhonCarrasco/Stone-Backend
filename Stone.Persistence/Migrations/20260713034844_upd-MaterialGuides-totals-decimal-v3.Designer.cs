@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260713034844_upd-MaterialGuides-totals-decimal-v3")]
+    partial class updMaterialGuidestotalsdecimalv3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -647,6 +650,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_despacho");
 
                     b.Property<decimal?>("Neto")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("neto");
 
@@ -659,10 +663,12 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("proveedor_id");
 
                     b.Property<decimal?>("TaxRate")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("iva");
 
                     b.Property<decimal?>("TotalValue")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("valor_total");
 
@@ -671,7 +677,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_actualizacion");
 
                     b.Property<decimal?>("ValueCurrency")
-                        .HasColumnType("decimal(10,2)")
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal(4,2)")
                         .HasColumnName("valor_moneda");
 
                     b.Property<int?>("Zone")
@@ -1349,6 +1356,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_recepcion");
 
                     b.Property<decimal?>("Neto")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("neto");
 
@@ -1361,10 +1369,12 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("proveedor_id");
 
                     b.Property<decimal?>("TaxRate")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("iva");
 
                     b.Property<decimal?>("TotalValue")
+                        .HasPrecision(10, 3)
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("valor_total");
 
@@ -1373,7 +1383,8 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_actualizacion");
 
                     b.Property<decimal?>("ValueCurrency")
-                        .HasColumnType("decimal(10,2)")
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal(4,2)")
                         .HasColumnName("valor_moneda");
 
                     b.HasKey("Id");

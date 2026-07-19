@@ -9,7 +9,10 @@ namespace Stone.Persistence.Configurations
         public void Configure(EntityTypeBuilder<ReceptionGuide> builder)
         {
             builder.Property(x => x.Folio).HasMaxLength(20);
-            builder.Property(x => x.TaxRate).HasPrecision(10, 3);
+            //builder.Property(x => x.TaxRate).HasPrecision(10, 3);
+            //builder.Property(x => x.Neto).HasPrecision(10, 3);
+            //builder.Property(x => x.TotalValue).HasPrecision(10, 3);
+            //builder.Property(x => x.ValueCurrency).HasPrecision(10, 3);
             builder.HasQueryFilter(x => x.Active);
 
             builder.ToTable("guia_recepcion");
