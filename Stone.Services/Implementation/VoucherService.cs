@@ -287,6 +287,7 @@ namespace Stone.Services.Implementation
                 voucherData.SupplierTo = request.SupplierTo!;
                 voucherData.ProjectTo = request.ProjectTo;
                 voucherData.BudgetId = request.BudgetId;
+                voucherData.UpdatedAt = DateTime.UtcNow;
 
                 await _voucherRepository.UpdateAsync();
 

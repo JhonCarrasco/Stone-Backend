@@ -43,7 +43,7 @@ namespace Stone.Services.Implementation
                     Folio = request.Folio,
                     DocumentType = request.DocumentType,
                     Observations = request.Observations,
-                    CurrencyType = request.CurrencyType!.ToUpper(),
+                    CurrencyType = request.CurrencyType,
                     ValueCurrency = request.ValueCurrency,
                     ProviderId = request.ProviderId,
                     CustomerId = request.CustomerId,
@@ -157,7 +157,7 @@ namespace Stone.Services.Implementation
                         Folio = EntityData.Folio,
                         DocumentType = EntityData.DocumentType,
                         Observations = EntityData.Observations,
-                        CurrencyType = EntityData.CurrencyType!.ToUpper(),
+                        CurrencyType = EntityData.CurrencyType,
                         ValueCurrency = EntityData.ValueCurrency,
                         Neto = EntityData.Neto,
                         TaxRate = EntityData.TaxRate,
@@ -176,7 +176,7 @@ namespace Stone.Services.Implementation
                                 Active = item.Active,
                                 ProductCode = item.ProductCode,
                                 Description = item.Description,
-                                UnitMeasurement = item.UnitMeasurement,
+                                UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                                 Quantity = item.Quantity,
                                 UnitValue = item.UnitValue,
                                 TotalValue = item.TotalValue,
@@ -256,7 +256,7 @@ namespace Stone.Services.Implementation
                     Folio = EntityData.Folio,
                     DocumentType = EntityData.DocumentType,
                     Observations = EntityData.Observations,
-                    CurrencyType = EntityData.CurrencyType!.ToUpper(),
+                    CurrencyType = EntityData.CurrencyType,
                     ValueCurrency = EntityData.ValueCurrency,
                     Neto = EntityData.Neto,
                     TaxRate = EntityData.TaxRate,
@@ -275,7 +275,7 @@ namespace Stone.Services.Implementation
                             Active = item.Active,
                             ProductCode = item.ProductCode,
                             Description = item.Description,
-                            UnitMeasurement = item.UnitMeasurement,
+                            UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                             Quantity = item.Quantity,
                             UnitValue = item.UnitValue,
                             TotalValue = item.TotalValue,
@@ -340,10 +340,11 @@ namespace Stone.Services.Implementation
                 }
 
                 //Actualizar valores
+                receptionData.UpdatedAt = DateTime.UtcNow;
                 receptionData.Folio = request.Folio;
                 receptionData.DocumentType = request.DocumentType;
                 receptionData.Observations = request.Observations;
-                receptionData.CurrencyType = request.CurrencyType!.ToUpper();
+                receptionData.CurrencyType = request.CurrencyType;
                 receptionData.ValueCurrency = request.ValueCurrency;
                 receptionData.ProviderId = request.ProviderId;
                 receptionData.CustomerId = request.CustomerId;
@@ -367,7 +368,7 @@ namespace Stone.Services.Implementation
                             {
                                 ProductCode = item.ProductCode,
                                 Description = item.Description,
-                                UnitMeasurement = item.UnitMeasurement,
+                                UnitMeasurement = item.UnitMeasurement!.ToUpper(),
                                 Quantity = item.Quantity,
                                 UnitValue = item.UnitValue,
                                 TotalValue = item.TotalValue,

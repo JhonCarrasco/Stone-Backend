@@ -36,7 +36,9 @@ namespace Stone.Services.Implementation
             var response = new BaseResponseGeneric<ICollection<BudgetResponseDto>>();
             try
             {
-                var EntityList = await budgetRepository.GetAsync(predicate: s => s.Description.Contains(searchText ?? string.Empty),
+                var EntityList = await budgetRepository.GetAsync(predicate: s => s.Description.Contains(searchText ?? string.Empty)
+                    || s.ProjectName.Contains(searchText ?? string.Empty) ||   s.Id.ToString().Equals(searchText ?? string.Empty)
+                    ,
                     orderBy: x => x.Description,
                     pagination);
 

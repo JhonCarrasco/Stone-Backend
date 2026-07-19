@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260713040316_upd-MaterialGuides-totals-decimal-v4")]
+    partial class updMaterialGuidestotalsdecimalv4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -671,7 +674,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_actualizacion");
 
                     b.Property<decimal?>("ValueCurrency")
-                        .HasColumnType("decimal(10,2)")
+                        .HasColumnType("decimal(5,2)")
                         .HasColumnName("valor_moneda");
 
                     b.Property<int?>("Zone")
@@ -1373,7 +1376,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("fecha_actualizacion");
 
                     b.Property<decimal?>("ValueCurrency")
-                        .HasColumnType("decimal(10,2)")
+                        .HasColumnType("decimal(5,2)")
                         .HasColumnName("valor_moneda");
 
                     b.HasKey("Id");
