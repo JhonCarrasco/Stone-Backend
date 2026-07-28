@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260731221850_upd-contact-entity")]
+    partial class updcontactentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -479,7 +482,7 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_creacion");
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int")
                         .HasColumnName("cliente_id");
 
@@ -1262,11 +1265,12 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("activo");
 
-                    b.Property<int?>("BankAccountId")
+                    b.Property<int>("BankAccountId")
                         .HasColumnType("int")
                         .HasColumnName("cuenta_banco_id");
 
                     b.Property<string>("BusinessActivity")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("giro");
 
@@ -1281,11 +1285,11 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("email");
 
-                    b.Property<int?>("LocationId")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int")
                         .HasColumnName("ubicacion_id");
 
-                    b.Property<int?>("PersonId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int")
                         .HasColumnName("persona_id");
 
@@ -1722,7 +1726,9 @@ namespace Stone.Persistence.Migrations
                 {
                     b.HasOne("Stone.Entities.Customer", "Customer")
                         .WithMany("Contacts")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Stone.Entities.Provider", "Provider")
                         .WithMany("Contacts")
@@ -1860,15 +1866,21 @@ namespace Stone.Persistence.Migrations
                 {
                     b.HasOne("Stone.Entities.BankAccount", "BankAccount")
                         .WithMany()
-                        .HasForeignKey("BankAccountId");
+                        .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Stone.Entities.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Stone.Entities.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BankAccount");
 

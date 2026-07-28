@@ -8,7 +8,7 @@ namespace Stone.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
-            builder.Property(x => x.BusinessActivity)
+            builder.Property(x => x.Position)
                             .HasMaxLength(100)
                             .IsUnicode(false);
             builder.Property(x => x.Phone)

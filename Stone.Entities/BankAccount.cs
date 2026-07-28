@@ -7,7 +7,7 @@ namespace Stone.Entities
         [Column("banco_id")]
         public int BankId { get; set; }
         [Column("numero_cuenta")]
-        public string Account { get; set; }
+        public string AccountNumber { get; set; }
         [Column("tipo_cuenta_id")]
         public int TypeAccountId { get; set; }
 

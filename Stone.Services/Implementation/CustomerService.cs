@@ -18,7 +18,6 @@ namespace Stone.Services.Implementation
         private readonly IContactRepository contactRepository;        
         private readonly ILogger<ICustomerService> logger;
         private readonly IMapper mapper;
-        private readonly IPersonService personService;
 
         public CustomerService(
             ICustomerRepository customerRepository, 
@@ -27,8 +26,7 @@ namespace Stone.Services.Implementation
             ILocationRepository locationRepository,
             IContactRepository contactRepository,
             ILogger<ICustomerService> logger,
-            IMapper mapper,
-            IPersonService personService)
+            IMapper mapper)
         {
             this.customerRepository = customerRepository;
             this.personRepository = personRepository;
@@ -37,7 +35,6 @@ namespace Stone.Services.Implementation
             this.contactRepository = contactRepository;
             this.logger = logger;
             this.mapper = mapper;
-            this.personService = personService;
         }
 
         public async Task<BaseResponseGeneric<ICollection<CustomerResponseDto>>> GetAsync(string? searchText, PaginationDto pagination)
@@ -46,9 +43,9 @@ namespace Stone.Services.Implementation
             try
             {
                 var customerEntityList = await customerRepository.GetAsync(
-                    predicate: s => s.DisplayName.Contains(searchText ?? string.Empty) 
-                    || s.Rut.Contains(searchText ?? string.Empty),
-                    orderBy: x => x.DisplayName,
+                    predicate: s => s.Person!.DisplayName.Contains(searchText ?? string.Empty) 
+                    || s.Person.Rut.Contains(searchText ?? string.Empty),
+                    orderBy: x => x.Person!.DisplayName,
                     pagination);
                 //response.Data = mapper.Map<ICollection<Customer>>(customerEntity);
                 response.Data = [];
@@ -65,10 +62,9 @@ namespace Stone.Services.Implementation
                         Active = data.Active,
                         CreateAt = data.CreateAt,
                         UpdatedAt = data.UpdatedAt,
-                        Rut = data.Rut,
                         Email = data.Email,
-                        DisplayName = data.DisplayName,
-                        Phone = data.Phone,
+                        Phone = data.Phone,                        
+                        BusinessActivity = data.BusinessActivity,
                         Person = personaMapper,
                         Location = locationMapper,
                         BankAccount = bankAccountMapper
@@ -81,15 +77,13 @@ namespace Stone.Services.Implementation
                         {
                             var contactsResponse = new ContactResponseDto
                             {
-                                ContactId = itemContact.Id,
-                                BusinessActivity = itemContact.BusinessActivity,
+                                Id = itemContact.Id,
+                                Active = itemContact.Active,
                                 Phone = itemContact.Phone,
                                 Email = itemContact.Email,
-                                PersonId = itemContact.PersonId,
-                                Rut = itemContact.Person!.Rut,
-                                DisplayName = itemContact.Person.DisplayName,
-                                ProviderId = itemContact.Provider!.Id,
-                                ProviderName = itemContact.Provider.Person.DisplayName
+                                DisplayName = itemContact.DisplayName,
+                                Position = itemContact.Position,
+                                CustomerId = itemContact.CustomerId,
                             };
                             customerResponse.Contacts.Add(contactsResponse);
                         }
@@ -126,10 +120,9 @@ namespace Stone.Services.Implementation
                     Active = data.Active,
                     CreateAt = data.CreateAt,
                     UpdatedAt = data.UpdatedAt,
-                    Rut = data.Rut,
                     Email = data.Email,
-                    DisplayName = data.DisplayName,
                     Phone = data.Phone,
+                    BusinessActivity = data.BusinessActivity,
                     Person = personaMapper,
                     Location = locationMapper,
                     BankAccount = bankAccountMapper
@@ -142,15 +135,13 @@ namespace Stone.Services.Implementation
                     {
                         var contactsResponse = new ContactResponseDto
                         {
-                            ContactId = itemContact.Id,
-                            BusinessActivity = itemContact.BusinessActivity,
+                            Id = itemContact.Id,
+                            Active = itemContact.Active,                            
                             Phone = itemContact.Phone,
                             Email = itemContact.Email,
-                            PersonId = itemContact.PersonId,
-                            Rut = itemContact.Person!.Rut,
-                            DisplayName = itemContact.Person.DisplayName,
-                            ProviderId = itemContact.Provider!.Id,
-                            ProviderName = itemContact.Provider.Person.DisplayName
+                            DisplayName = itemContact.DisplayName,
+                            Position = itemContact.Position,
+                            CustomerId = itemContact.CustomerId,
                         };
                         customerResponse.Contacts.Add(contactsResponse);
                     }
@@ -188,7 +179,7 @@ namespace Stone.Services.Implementation
                 {
                     Rut = request.Rut,
                     DisplayName = request.DisplayName,
-                    TypePerson = request.TypePerson,
+                    TypePerson = request.TypePersonId,
                 };
 
                 var personaId = await personRepository.AddAsync(personEntity);
@@ -204,10 +195,9 @@ namespace Stone.Services.Implementation
                 //Crear Cliente entity
                 var customerEntity = new Customer
                 {
-                    Rut = request.Rut,
                     Email = request.Email,
-                    DisplayName = request.DisplayName!,
                     Phone = request.Phone!,
+                    BusinessActivity = request.BusinessActivity,
                     PersonId = personaId,
                     LocationId = null,
                     BankAccountId = null
@@ -224,7 +214,7 @@ namespace Stone.Services.Implementation
                         var bankAccount = new BankAccount
                         {
                             BankId = (int)request.BankId!,
-                            Account = request.AccountNumber,
+                            AccountNumber = request.AccountNumber,
                             TypeAccountId = (int)request.TypeAccountId!
                         };
                         var bankAccountId = await bankAccountRepository.AddAsync(bankAccount);
@@ -266,31 +256,31 @@ namespace Stone.Services.Implementation
                         //Crear contacto entity
                         var contact = new Contact
                         {
-                            BusinessActivity = itemContact.BusinessActivity,
+                            CreateAt = DateTime.UtcNow,
+                            DisplayName = itemContact.DisplayName,
                             Phone = itemContact.Phone,
                             Email = itemContact.Email,
+                            Position = itemContact.Position,
                             CustomerId = customerId,
-                            ProviderId = itemContact.ProviderId,
                         };
 
-                        //Guardar personas si no existen
-                        var personContactEntity = await personRepository.GetByRutAsync(itemContact.Rut);
-                        var personEntityId = 0;
-                        if (personContactEntity == null)
-                        {
-                            //Guardar nueva persona id en entity Contacto
-                            personEntityId = await personRepository.AddAsync(new Person
-                            {
-                                Rut = itemContact.Rut,
-                                DisplayName = itemContact.DisplayName,
-                                TypePerson = itemContact.TypePerson
-                            });
-                            contact.PersonId = personEntityId;
-                        }
-
+                        ////Guardar personas si no existen
+                        //var personContactEntity = await personRepository.GetByRutAsync(itemContact.Phone);
+                        //var personEntityId = 0;
+                        //if (personContactEntity == null)
+                        //{
+                        //    //Guardar nueva persona id en entity Contacto
+                        //    personEntityId = await personRepository.AddAsync(new Person
+                        //    {
+                        //        Rut = itemContact.Rut,
+                        //        DisplayName = itemContact.DisplayName,
+                        //        TypePerson = itemContact.TypePerson
+                        //    });
+                        //    contact.PersonId = personEntityId;
+                        //}
                         //TODO: preguntar si personaId, clienteId, proveedorId, ya existe en entidad contacto antes de guardar, evitar duplicidad
+                        //contact.PersonId = personContactEntity != null ? personContactEntity.Id : personEntityId;
 
-                        contact.PersonId = personContactEntity != null ? personContactEntity.Id : personEntityId;
                         //Guardar listado de contactos
                         var contactRespose = await contactRepository.AddAsync(contact);
                     }
@@ -299,14 +289,6 @@ namespace Stone.Services.Implementation
 
                 response.Data = customerId;
                 response.Success = true;
-
-
-                //var personaId = await personService.AddAsync(new Person
-                //{
-                //    Rut = request.Rut,
-                //    DisplayName = request.DisplayName,
-                //    TypePerson = request.TypePerson,
-                //});
             }
             catch (Exception ex)
             {
@@ -340,22 +322,19 @@ namespace Stone.Services.Implementation
                     //Actualizar Persona entity
                     personData.Rut = request.Rut;
                     personData.DisplayName = request.DisplayName;
-                    personData.TypePerson = request.TypePerson;
+                    personData.TypePerson = request.TypePersonId;
                     personData.Active = personData.Active;
                     personData.CreateAt = personData.CreateAt;
                     personData.UpdatedAt = DateTime.UtcNow;
 
                     await personRepository.UpdateAsync();
-                    //var entity = mapper.Map(personEntity, personData); //sobre escribir data nueva al objeto obtenido en la db
-                    //await personRepository.UpdateAsync();
                     #endregion
 
                     //Actualizar Cliente entity
                     customerData.Id = customerData.Id;
-                    customerData.Rut = request.Rut;
                     customerData.Email = request.Email;
-                    customerData.DisplayName = request.DisplayName!;
                     customerData.Phone = request.Phone!;
+                    customerData.BusinessActivity = request.BusinessActivity;
                     customerData.PersonId = customerData.PersonId;
                     customerData.LocationId = customerData.LocationId;
                     customerData.BankAccountId = customerData.BankAccountId;
@@ -369,7 +348,7 @@ namespace Stone.Services.Implementation
                         {
                             //Actualizar informacion de banco
                             bankAccountData.BankId = (int)request.BankId!;
-                            bankAccountData.Account = request.AccountNumber!;
+                            bankAccountData.AccountNumber = request.AccountNumber!;
                             bankAccountData.TypeAccountId = (int)request.TypeAccountId!;                            
                             await bankAccountRepository.UpdateAsync();
                         }
@@ -379,7 +358,7 @@ namespace Stone.Services.Implementation
                             var bankAccount = new BankAccount
                             {
                                 BankId = (int)request.BankId!,
-                                Account = request.AccountNumber!,
+                                AccountNumber = request.AccountNumber!,
                                 TypeAccountId = (int)request.TypeAccountId!
                             };
                             var bankAccountId = await bankAccountRepository.AddAsync(bankAccount);
@@ -424,60 +403,34 @@ namespace Stone.Services.Implementation
                     {                      
                         foreach (var itemContact in request.Contacts!)
                         {                       
-                            if (itemContact.ContactId is not null)
+                            if (itemContact.Id is not null)
                             {
                                 //buscar contacto por id 
-                                var contactData = await contactRepository.GetAsync((int)itemContact.ContactId);
+                                var contactData = await contactRepository.GetAsync((int)itemContact.Id);
                                 if (contactData is not null)
                                 {
                                     //Actualizar contacto entity
-                                    contactData.BusinessActivity = itemContact.BusinessActivity;
+                                    contactData.DisplayName = itemContact.DisplayName;                                    
                                     contactData.Phone = itemContact.Phone;
                                     contactData.Email = itemContact.Email;
+                                    contactData.Position = itemContact.Position;
                                     contactData.ProviderId = itemContact.ProviderId;
+                                    contactData.UpdatedAt = DateTime.UtcNow;
                                     await contactRepository.UpdateAsync();
-                                }                                
-
-                                //Actualizar persona
-                                var personContactData = await personRepository.GetAsync((int)itemContact.PersonId!);
-                                if(personContactData is not null)
-                                {
-                                    personContactData.Rut = itemContact.Rut;
-                                    personContactData.DisplayName = itemContact.DisplayName;
-                                    personContactData.TypePerson = itemContact.TypePerson;
-                                    personContactData.UpdatedAt = DateTime.UtcNow;
-                                    await personRepository.UpdateAsync();
-                                }
+                                }                               
                             }
                             else
                             {
                                 //Crear contacto entity
                                 var contact = new Contact
                                 {
-                                    BusinessActivity = itemContact.BusinessActivity,
+                                    DisplayName = itemContact.DisplayName,
                                     Phone = itemContact.Phone,
                                     Email = itemContact.Email,
+                                    Position = itemContact.Position,
                                     CustomerId = customerData.Id,
-                                    ProviderId = itemContact.ProviderId,
                                     CreateAt = DateTime.UtcNow
-                                };
-
-                                //Guardar personas si no existen
-                                var personContactEntity = await personRepository.GetByRutAsync(itemContact.Rut);
-                                var personEntityId = 0;
-                                if (personContactEntity == null)
-                                {
-                                    //Guardar nueva persona id en entity Contacto
-                                    personEntityId = await personRepository.AddAsync(new Person
-                                    {
-                                        Rut = itemContact.Rut,
-                                        DisplayName = itemContact.DisplayName,
-                                        TypePerson = itemContact.TypePerson
-                                    });
-                                    contact.PersonId = personEntityId;
-                                }
-
-                                contact.PersonId = personContactEntity != null ? personContactEntity.Id : personEntityId;
+                                };                                                               
                                 //Guardar listado de contactos
                                 await contactRepository.AddAsync(contact);
                             }

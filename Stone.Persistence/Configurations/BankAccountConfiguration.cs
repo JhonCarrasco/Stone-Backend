@@ -8,7 +8,7 @@ namespace Stone.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<BankAccount> builder)
         {
-            builder.Property(x => x.Account)
+            builder.Property(x => x.AccountNumber)
                             .HasMaxLength(100)
                             .IsUnicode(false);
 

@@ -80,7 +80,6 @@ namespace Stone.Services.Implementation
                         var customer = new Customer()
                         {
                             Email = request.Email,
-                            DisplayName = request.DisplayName
                         };
 
                         await customerRepository.AddAsync(customer);

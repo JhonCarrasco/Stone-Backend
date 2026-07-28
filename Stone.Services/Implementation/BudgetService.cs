@@ -83,9 +83,7 @@ namespace Stone.Services.Implementation
                         budgetResponse.Customer = new CustomerResponseDto
                         {
                             Id = customerMapper.Id,
-                            Rut = customerMapper.Rut,
                             Email = customerMapper.Email,
-                            DisplayName = customerMapper.DisplayName,
                             Phone = customerMapper.Phone                            
                         };
                     }
@@ -193,9 +191,7 @@ namespace Stone.Services.Implementation
                         budgetResponse.Customer = new CustomerResponseDto
                         {
                             Id = customerMapper.Id,
-                            Rut = customerMapper.Rut,
                             Email = customerMapper.Email,
-                            DisplayName = customerMapper.DisplayName,
                             Phone = customerMapper.Phone
                         };
                     }
