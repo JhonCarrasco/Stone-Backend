@@ -35,7 +35,7 @@ namespace Stone.Services.Implementation
                 var EntityList = await _voucherRepository.GetAsync(predicate: s => s.Observations!.Contains(searchText ?? string.Empty)
                     || s.SupplierTo.Contains(searchText ?? string.Empty)
                     || s.ProjectTo!.Contains(searchText ?? string.Empty)
-                    || s.Budget!.Customer!.DisplayName.Contains(searchText ?? string.Empty)
+                    || s.Budget!.Customer!.Person!.DisplayName.Contains(searchText ?? string.Empty)
                     || s.Budget!.Description!.Contains(searchText ?? string.Empty)
                     ,orderBy: x => x.Id
                     ,pagination);

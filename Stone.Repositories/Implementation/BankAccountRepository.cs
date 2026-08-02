@@ -14,7 +14,7 @@ namespace Stone.Repositories.Implementation
 
         public async Task<BankAccount?> GetAsync(string accountNumber, int bankId, int typeAccount)
         {
-            return await context.Set<BankAccount>().FirstOrDefaultAsync(x => x.Account == accountNumber && x.BankId == bankId && x.TypeAccountId == typeAccount);
+            return await context.Set<BankAccount>().FirstOrDefaultAsync(x => x.AccountNumber == accountNumber && x.BankId == bankId && x.TypeAccountId == typeAccount);
         }
     }
 }

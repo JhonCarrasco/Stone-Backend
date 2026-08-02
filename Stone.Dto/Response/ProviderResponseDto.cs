@@ -1,4 +1,6 @@
-﻿namespace Stone.Dto.Response
+﻿using Stone.Entities;
+
+namespace Stone.Dto.Response
 {
     public class ProviderResponseDto
     {
@@ -6,16 +8,17 @@
         public bool Active { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public string? PersonName { get; set; }
-        public string? PersonRut { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string? BusinessActivity { get; set; }
         public int PersonId { get; set; }
         public int? LocationId { get; set; }
         public int? BankAccountId { get; set; }
         public ICollection<ContactResponseDto>? Contacts { get; set; }
 
-        public static implicit operator ProviderResponseDto(BaseResponseGeneric<ProviderResponseDto> v)
-        {
-            throw new NotImplementedException();
-        }
+        public Person? Person { get; set; }
+        public Location? Location { get; set; }
+        public BankAccount? BankAccount { get; set; }
+
     }
 }

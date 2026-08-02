@@ -8,15 +8,10 @@ namespace Stone.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.Property(x => x.Rut)
-                .HasMaxLength(12);
-
+            
             builder.Property(x => x.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-
-            builder.Property(x => x.DisplayName)
-                .HasMaxLength(200);
 
 
             builder.ToTable("cliente");

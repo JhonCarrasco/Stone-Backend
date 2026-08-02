@@ -19,9 +19,9 @@ namespace Stone.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? searchText, [FromQuery] PaginationDto pagination)
         {
-            var response = await providerService.GetAsync();
+            var response = await providerService.GetAsync(searchText, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpGet("{id:int}")]
@@ -40,7 +40,7 @@ namespace Stone.Api.Controllers
 
         [HttpPut("{id:int}")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
-        public async Task<IActionResult> Put(int id, Provider request)
+        public async Task<IActionResult> Put(int id, ProviderRequestDto request)
         {
             var response = await providerService.UpdateAsync(id, request);
             return response.Success ? Ok(response) : BadRequest(response);

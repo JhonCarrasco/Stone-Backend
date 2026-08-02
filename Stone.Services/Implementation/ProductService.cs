@@ -182,11 +182,13 @@ namespace Stone.Services.Implementation
                         Active = providerMapper.Active,
                         CreateAt = providerMapper.CreateAt,
                         UpdatedAt = providerMapper.UpdatedAt,
-                        PersonName = providerMapper.Person!.DisplayName,
-                        PersonId = providerMapper.PersonId,
+                        PersonId = (int)providerMapper.PersonId,
                         LocationId = providerMapper.LocationId,
-                        BankAccountId = providerMapper.BankAccountId
+                        BankAccountId = providerMapper.BankAccountId,
+                        Person = providerMapper.Person
                     };
+                    productResponse.ProviderName = providerResponse.Person!.DisplayName;
+                    productResponse.ProviderId = providerResponse.Id;
                 }
                     
                 if (contactsMapper is not null)
@@ -196,25 +198,22 @@ namespace Stone.Services.Implementation
                     {
                         var contactsResponse = new ContactResponseDto
                         {
-                            ContactId = itemContact.Id,
-                            BusinessActivity = itemContact.BusinessActivity,
+                            Id = itemContact.Id,
+                            Active = itemContact.Active,
+                            DisplayName = itemContact.DisplayName,
                             Phone = itemContact.Phone,
                             Email = itemContact.Email,
-                            PersonId = itemContact.PersonId,
-                            Rut = itemContact.Person!.Rut,
-                            DisplayName = itemContact.Person.DisplayName,
-                            ProviderId = itemContact.Provider!.Id,
-                            ProviderName = itemContact.Provider?.Person?.DisplayName
+                            Position = itemContact.Position,                            
+                            CustomerId = itemContact.CustomerId,
+                            ProviderId = itemContact.ProviderId,
                         };
                         contactsList.Add(contactsResponse);
 
                     }
                     providerResponse.Contacts = contactsList;
                 }
-                productResponse.ProviderName = providerResponse.PersonName;
-                productResponse.ProviderId = providerResponse.Id;
-                response.Data = productResponse;
                 
+                response.Data = productResponse;                
                 response.Success = true;
             }
             catch (Exception ex)

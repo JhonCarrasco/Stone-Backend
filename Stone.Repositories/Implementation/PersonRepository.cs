@@ -16,5 +16,6 @@ namespace Stone.Repositories.Implementation
         {
             return await context.Set<Person>().FirstOrDefaultAsync(x => x.Rut == Rut);
         }
+
     }
 }

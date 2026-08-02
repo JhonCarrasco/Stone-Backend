@@ -192,9 +192,7 @@ namespace Stone.Services.Implementation
                         materialResponse.Customer = new CustomerResponseDto
                         {
                             Id = customerMapper.Id,
-                            Rut = customerMapper.Rut,
                             Email = customerMapper.Email,
-                            DisplayName = customerMapper.DisplayName,
                             Phone = customerMapper.Phone
                         };
                     }
@@ -205,13 +203,18 @@ namespace Stone.Services.Implementation
                         {
                             Id = providerMapper.Id,
                             Active = providerMapper.Active,
-                            PersonName = providerMapper.Person!.DisplayName,
-                            PersonRut = providerMapper.Person!.Rut,
+                            CreateAt = providerMapper.CreateAt,
+                            UpdatedAt = providerMapper.UpdatedAt,
+                            Email = providerMapper.Email,
+                            Phone = providerMapper.Phone,
+                            BusinessActivity = providerMapper.BusinessActivity,
                             PersonId = providerMapper.Person.Id,
                             LocationId = providerMapper.LocationId,
                             BankAccountId = providerMapper.BankAccountId,
-                            CreateAt = providerMapper.CreateAt,
-                            UpdatedAt = providerMapper.UpdatedAt,
+                            
+                            Person = providerMapper.Person,
+                            Location = providerMapper.Location,
+                            BankAccount = providerMapper.BankAccount,
                             Contacts = null //TODO: Implementar mapeo de contactos si es necesario
                         };
                     }
@@ -291,9 +294,7 @@ namespace Stone.Services.Implementation
                     materialResponse.Customer = new CustomerResponseDto
                     {
                         Id = customerMapper.Id,
-                        Rut = customerMapper.Rut,
                         Email = customerMapper.Email,
-                        DisplayName = customerMapper.DisplayName,
                         Phone = customerMapper.Phone
                     };
                 }
@@ -304,13 +305,18 @@ namespace Stone.Services.Implementation
                     {
                         Id = providerMapper.Id,
                         Active = providerMapper.Active,
-                        PersonName = providerMapper.Person!.DisplayName,
-                        PersonRut = providerMapper.Person!.Rut,
+                        CreateAt = providerMapper.CreateAt,
+                        UpdatedAt = providerMapper.UpdatedAt,
+                        Email = providerMapper.Email,
+                        Phone = providerMapper.Phone,
+                        BusinessActivity = providerMapper.BusinessActivity,
                         PersonId = providerMapper.Person.Id,
                         LocationId = providerMapper.LocationId,
                         BankAccountId = providerMapper.BankAccountId,
-                        CreateAt = providerMapper.CreateAt,
-                        UpdatedAt = providerMapper.UpdatedAt,
+
+                        Person = providerMapper.Person,
+                        Location = providerMapper.Location,
+                        BankAccount = providerMapper.BankAccount,
                         Contacts = null //TODO: Implementar mapeo de contactos si es necesario
                     };
                 }

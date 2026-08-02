@@ -15,11 +15,11 @@ namespace Stone.Repositories.Implementation
         public async Task<ICollection<Contact>> GetAsyncbyCustomerId(int customerId)
         {
             return await context.Set<Contact>()
-                .Include(x => x.Person)
+                //.Include(x => x.Person)
                 .Include(x => x.Provider)
                 .Include(x => x.Customer)
                 .Where(x => x.CustomerId == customerId)
-                .OrderBy(x => x.Person!.DisplayName)
+                .OrderBy(x => x.DisplayName)
                 .AsNoTracking()
                 .IgnoreQueryFilters()//traer data aunque relacion haya sido eliminado
                 .ToListAsync();
