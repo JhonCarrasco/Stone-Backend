@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
+using Stone.Repositories.Implementation;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
 
@@ -15,12 +16,14 @@ namespace Stone.Services.Implementation
         private readonly ICustomerService _customerService;
         private readonly IProviderService _providerService;
         private readonly IMaterialRepository _materialRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<IMaterialService> _logger;
         private readonly IMapper _mapper;
         public ReceptionGuideService(IReceptionGuideRepository receptionGuideRepository,
             ICustomerService customerService,
             IProviderService providerService,
             IMaterialRepository materialRepository,
+            IProductRepository productRepository,
             ILogger<IMaterialService> logger,
             IMapper mapper)
         {
@@ -28,6 +31,7 @@ namespace Stone.Services.Implementation
             this._customerService = customerService;
             this._providerService = providerService;
             this._materialRepository = materialRepository;
+            this._productRepository = productRepository;
             this._logger = logger;
             this._mapper = mapper;
         }
@@ -71,8 +75,22 @@ namespace Stone.Services.Implementation
                             UnitValue = item.UnitValue,
                             TotalValue = item.TotalValue,
                             ProductId = item.ProductId,
-                            ReceptionId = receptionId
+                            ReceptionId = receptionId,
                         };
+
+                        //TODO: crear Product si no existe un productoId
+                        if (item.ProductId is null)
+                        {
+                            var newProduct = new Product
+                            {
+                                Description = item.Description,
+                            };
+
+                            var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                            itemMaterial.ProductId = newProductIdResponse;
+                        }
+
                         var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                     }
                 }
@@ -381,6 +399,20 @@ namespace Stone.Services.Implementation
                                 ProductId = item.ProductId,
                                 ReceptionId = receptionData.Id
                             };
+
+                            //TODO: crear Product si no existe un productoId
+                            if (item.ProductId is null)
+                            {
+                                var newProduct = new Product
+                                {
+                                    Description = item.Description,
+                                };
+
+                                var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                                itemMaterial.ProductId = newProductIdResponse;
+                            }
+
                             var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                         }
                         else

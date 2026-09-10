@@ -16,6 +16,7 @@ namespace Stone.Services.Implementation
         private readonly IMaterialRepository _materialRepository;
         private readonly ICustomerService _customerService;
         private readonly IProviderService _providerService;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<IMaterialService> _logger;
         private readonly IMapper _mapper;
 
@@ -23,6 +24,7 @@ namespace Stone.Services.Implementation
             IMaterialRepository materialRepository,
             ICustomerService customerService,
             IProviderService providerService,
+            IProductRepository productRepository,
             ILogger<IMaterialService> logger,
             IMapper mapper)
         {
@@ -30,6 +32,7 @@ namespace Stone.Services.Implementation
             this._materialRepository = materialRepository;
             this._customerService = customerService;
             this._providerService = providerService;
+            this._productRepository = productRepository;
             this._logger = logger;
             this._mapper = mapper;
         }
@@ -79,6 +82,20 @@ namespace Stone.Services.Implementation
                             ProductId = item.ProductId,
                             DispatchId = dispatchId
                         };
+
+                        //TODO: crear Product si no existe un productoId
+                        if (item.ProductId is null)
+                        {
+                            var newProduct = new Product
+                            {
+                                Description = item.Description,
+                            };
+
+                            var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                            itemMaterial.ProductId = newProductIdResponse;
+                        }
+
                         var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                     }
                 }
@@ -396,6 +413,20 @@ namespace Stone.Services.Implementation
                                 ProductId = item.ProductId,
                                 DispatchId = dispatchData.Id
                             };
+
+                            //TODO: crear Product si no existe un productoId
+                            if (item.ProductId is null)
+                            {
+                                var newProduct = new Product
+                                {
+                                    Description = item.Description,
+                                };
+
+                                var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                                itemMaterial.ProductId = newProductIdResponse;
+                            }
+
                             var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                         }
                         else

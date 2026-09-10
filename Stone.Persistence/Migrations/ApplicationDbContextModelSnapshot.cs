@@ -904,6 +904,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("material");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int")
+                        .HasColumnName("producto_id");
+
                     b.Property<decimal?>("Thickness")
                         .HasPrecision(10, 3)
                         .HasColumnType("decimal(8,3)")

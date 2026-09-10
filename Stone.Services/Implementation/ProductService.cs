@@ -238,6 +238,9 @@ namespace Stone.Services.Implementation
                     //TODO: responder exception e interrumpir flujo
                 }
 
+                //TODO: Validar que manufacturerId y categoryId existan en sus respectivas tablas, sino, validar ManufacturerDescription is no null, entonces crear manufacturer y asignar el Id al product, lo mismo para category.
+                
+
                 var newProduct = new Product
                 {
                     Description         = request.Description,

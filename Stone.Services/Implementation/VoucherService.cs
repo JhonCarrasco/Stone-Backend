@@ -13,16 +13,19 @@ namespace Stone.Services.Implementation
     {
         private readonly IMaterialVoucherRepository _voucherRepository;
         private readonly IMaterialRepository _materialRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<IMaterialService> _logger;
         private readonly IMapper _mapper;
 
         public VoucherService(IMaterialVoucherRepository voucherRepository,
             IMaterialRepository materialRepository,
+            IProductRepository productRepository,
             ILogger<IMaterialService> logger,
             IMapper mapper)
         {
             _voucherRepository = voucherRepository;
             _materialRepository = materialRepository;
+            _productRepository = productRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -254,6 +257,19 @@ namespace Stone.Services.Implementation
                             ProductId = item.ProductId,
                             VoucherId = voucherId
                         };
+                        //TODO: crear Product si no existe un productoId
+                        if (item.ProductId is null)
+                        {
+                            var newProduct = new Product
+                            {
+                                Description = item.Description,
+                            };
+
+                            var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                            itemMaterial.ProductId = newProductIdResponse;
+                        }
+
                         var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                     }
                 }
@@ -310,6 +326,20 @@ namespace Stone.Services.Implementation
                                 ProductId = item.ProductId,
                                 VoucherId = voucherData.Id
                             };
+
+                            //TODO: crear Product si no existe un productoId
+                            if (item.ProductId is null)
+                            {
+                                var newProduct = new Product
+                                {
+                                    Description = item.Description,
+                                };
+
+                                var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                                itemMaterial.ProductId = newProductIdResponse;
+                            }
+
                             var itemMaterialId = await _materialRepository.AddAsync(itemMaterial);
                         }
                         else
