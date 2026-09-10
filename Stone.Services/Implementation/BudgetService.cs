@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Stone.Dto.Request;
@@ -14,6 +15,7 @@ namespace Stone.Services.Implementation
         private readonly IBudgetRepository budgetRepository;
         private readonly IItemizedProductRepository itemizedProductRepository;
         private readonly IItemizedServiceRepository itemizedServiceRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<IBudgetService> logger;
         private readonly IMapper mapper;
 
@@ -21,12 +23,14 @@ namespace Stone.Services.Implementation
             IBudgetRepository budgetRepository, 
             IItemizedProductRepository itemizedProductRepository, 
             IItemizedServiceRepository itemizedServiceRepository,
+            IProductRepository productRepository,
             ILogger<IBudgetService> logger, 
             IMapper mapper)
         {
             this.budgetRepository = budgetRepository;
             this.itemizedProductRepository = itemizedProductRepository;
             this.itemizedServiceRepository = itemizedServiceRepository;
+            this._productRepository = productRepository;
             this.logger = logger;
             this.mapper = mapper;
         }
@@ -84,7 +88,8 @@ namespace Stone.Services.Implementation
                         {
                             Id = customerMapper.Id,
                             Email = customerMapper.Email,
-                            Phone = customerMapper.Phone                            
+                            Phone = customerMapper.Phone,           
+                            Person = customerMapper.Person
                         };
                     }
 
@@ -108,7 +113,8 @@ namespace Stone.Services.Implementation
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
-                                BudgetId = (int)item.BudgetId!
+                                BudgetId = (int)item.BudgetId!,
+                                ProductId = item.ProductId,
                             };
                             budgetResponse.ItemizedProducts.Add(itemizedProductResponse);
                         }
@@ -192,7 +198,8 @@ namespace Stone.Services.Implementation
                         {
                             Id = customerMapper.Id,
                             Email = customerMapper.Email,
-                            Phone = customerMapper.Phone
+                            Phone = customerMapper.Phone,
+                            Person = customerMapper.Person
                         };
                     }
 
@@ -216,7 +223,8 @@ namespace Stone.Services.Implementation
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
-                                BudgetId = (int)item.BudgetId!
+                                BudgetId = (int)item.BudgetId!,
+                                ProductId = item.ProductId,
                             };
                             budgetResponse.ItemizedProducts.Add(itemizedProductResponse);
                         }
@@ -294,8 +302,26 @@ namespace Stone.Services.Implementation
                             UnitValue = item.UnitValue,
                             amount = item.amount,
                             TotalValue = item.TotalValue,
-                            BudgetId = budgetId
+                            BudgetId = budgetId,
+                            ProductId = item.ProductId,
                         };
+
+                        //TODO: crear Product si no existe un productoId
+                        if (item.ProductId is null)
+                        {
+                            var newProduct = new Product
+                            {
+                                Description = item.Material,
+                                Color = string.IsNullOrEmpty(item.Color) ? null : item.Color,
+                            };
+
+                            var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                            itemProducto.ProductId = newProductIdResponse;
+                        }
+
+
+                        
                         var itemProductoId = await itemizedProductRepository.AddAsync(itemProducto);
                     }
                 }
@@ -332,7 +358,7 @@ namespace Stone.Services.Implementation
         {
             var response = new BaseResponseGeneric<int>();
             try
-            {
+            {              
                 var budgetData = await budgetRepository.GetAsync(id);
                 if (budgetData == null)
                 {
@@ -379,8 +405,24 @@ namespace Stone.Services.Implementation
                                 UnitValue = item.UnitValue,
                                 amount = item.amount,
                                 TotalValue = item.TotalValue,
-                                BudgetId = budgetData.Id
+                                BudgetId = budgetData.Id,
+                                ProductId = item.ProductId,
                             };
+
+                            //TODO: crear Product si no existe un productoId
+                            if (item.ProductId is null)
+                            {
+                                var newProduct = new Product
+                                {
+                                    Description = item.Material,
+                                    Color = string.IsNullOrEmpty(item.Color) ? null : item.Color,
+                                };
+
+                                var newProductIdResponse = await _productRepository.AddAsync(newProduct);
+
+                                itemProducto.ProductId = newProductIdResponse;
+                            }
+
                             var itemProductoId = await itemizedProductRepository.AddAsync(itemProducto);
                         }
                         else

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Stone.Persistence;
 
@@ -11,9 +12,11 @@ using Stone.Persistence;
 namespace Stone.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260805225944_add-expense-controller")]
+    partial class addexpensecontroller
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -691,8 +694,9 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("activo");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int")
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("monto");
 
                     b.Property<string>("BillNumber")
@@ -723,8 +727,9 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_gasto");
 
-                    b.Property<int>("ExpenseTypeId")
-                        .HasColumnType("int")
+                    b.Property<string>("ExpenseTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("gasto_tipo");
 
                     b.Property<string>("File")
@@ -735,12 +740,14 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("ubicacion");
 
-                    b.Property<int?>("MethodPaymentId")
-                        .HasColumnType("int")
+                    b.Property<string>("MethodPaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("metodo_tipo");
 
-                    b.Property<int?>("PaymentReceiptId")
-                        .HasColumnType("int")
+                    b.Property<string>("PaymentReceiptId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("pago_tipo");
 
                     b.Property<string>("Project")
@@ -903,10 +910,6 @@ namespace Stone.Persistence.Migrations
                     b.Property<string>("Material")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("material");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int")
-                        .HasColumnName("producto_id");
 
                     b.Property<decimal?>("Thickness")
                         .HasPrecision(10, 3)

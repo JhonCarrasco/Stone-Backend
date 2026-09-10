@@ -24,6 +24,8 @@ namespace Stone.Entities
         public int? TotalValue { get; set; }
         [Column("presupuesto_id")]
         public int? BudgetId { get; set; }
+        [Column("producto_id")]
+        public int? ProductId { get; set; }
 
         public virtual Budget? Budget { get; set; }
     }

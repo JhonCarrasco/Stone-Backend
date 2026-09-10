@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  azuresqledge:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: azuresqledge
+    environment:
+      SA_PASSWORD: "Esteban123!"
+      MSSQL_SA_PASSWORD: "Esteban123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14330:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Esteban123! -Q 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  stone-api:
+    image: stone-backend-api:1.0.0
+    container_name: stone-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      azuresqledge:
+        condition: service_healthy
+    environment:
+      DB_CONNECTION_STRING: "Server=azuresqledge,1433;Initial Catalog=StoneDb;Persist Security Info=False;User ID=sa;Password=Esteban123!;Trust Server Certificate=True;"
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+
+volumes:
+  sqldata:

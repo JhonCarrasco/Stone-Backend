@@ -16,5 +16,6 @@
         public int? amount { get; set; }
         public int? TotalValue { get; set; }
         public int? BudgetId { get; set; }
+        public int? ProductId { get; set; }
     }
 }

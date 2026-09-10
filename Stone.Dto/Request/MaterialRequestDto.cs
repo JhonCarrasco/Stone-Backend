@@ -1,6 +1,4 @@
-﻿using Stone.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace Stone.Dto.Request
 {
     public class MaterialRequestDto

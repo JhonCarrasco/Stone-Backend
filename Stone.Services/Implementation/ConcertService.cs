@@ -26,23 +26,7 @@ namespace Stone.Services.Implementation
             this.fileStorage = fileStorage;
         }
 
-        public async Task<BaseResponseGeneric<ConcertResponseDto>> GetAsync(int id)
-        {
-            var response = new BaseResponseGeneric<ConcertResponseDto>();
-            try
-            {
-                var data = await repository.GetAsync(id);
-                response.Data = mapper.Map<ConcertResponseDto>(data);
-                response.Success = true; // data != null;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Ocurrió un error al obtener la información.";
-                logger.LogError(ex, $"{response.ErrorMessage} {ex.Message}");
-            }
-            return response;
-        }
-
+        
         public async Task<BaseResponseGeneric<ICollection<ConcertResponseDto>>> GetAsync(string? title, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<ConcertResponseDto>>();
@@ -55,6 +39,23 @@ namespace Stone.Services.Implementation
             catch (Exception ex)
             {
                 response.ErrorMessage = "Ocurrió un error al obteenr la información.";
+                logger.LogError(ex, $"{response.ErrorMessage} {ex.Message}");
+            }
+            return response;
+        }
+
+        public async Task<BaseResponseGeneric<ConcertResponseDto>> GetAsync(int id)
+        {
+            var response = new BaseResponseGeneric<ConcertResponseDto>();
+            try
+            {
+                var data = await repository.GetAsync(id);
+                response.Data = mapper.Map<ConcertResponseDto>(data);
+                response.Success = true; // data != null;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrió un error al obtener la información.";
                 logger.LogError(ex, $"{response.ErrorMessage} {ex.Message}");
             }
             return response;

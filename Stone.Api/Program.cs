@@ -1,3 +1,4 @@
+using Google.Apis.Drive.v3;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,7 @@ using Stone.Repositories;
 using Stone.Repositories.Implementation;
 using Stone.Repositories.Implements;
 using Stone.Repositories.Interface;
+using Stone.Services.Factory;
 using Stone.Services.Implementation;
 using Stone.Services.Interface;
 using Stone.Services.Profiles;
@@ -22,6 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Options pattern register
 builder.Services.Configure<AppSettings>(builder.Configuration);
+
+string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                            builder.Configuration.GetConnectionString("defaultConnection");
 
 //bool StorageAzure = builder.Configuration.GetValue<bool>("Flags.StorageAzure");
 
@@ -52,7 +57,7 @@ builder.Services.AddSwaggerGen();
 //Configuring Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
+    options.UseSqlServer(connectionString);
 });
 
 //Identity
@@ -110,6 +115,7 @@ builder.Services.AddTransient<IMaterialRepository, MaterialRepository>();
 builder.Services.AddTransient<IMaterialVoucherRepository, MaterialVoucherRepository>();
 builder.Services.AddTransient<IReceptionGuideRepository, ReceptionGuideRepository>();
 builder.Services.AddTransient<IDispatchGuideRepository, DispatchGuideRepository>();
+builder.Services.AddTransient<IExpenseRepository, ExpenseRepository>();
 
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IConcertService, ConcertService>();
@@ -123,10 +129,22 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IBudgetService, BudgetService>();
 builder.Services.AddTransient<IProviderService, ProviderService>();
 builder.Services.AddTransient<ISharedService, SharedService>();
-builder.Services.AddTransient<IMaterialService, MaterialService>();
 builder.Services.AddTransient<IVoucherService, VoucherService>();
 builder.Services.AddTransient<IReceptionGuideService, ReceptionGuideService>();
 builder.Services.AddTransient<IDispatchGuideService, DispatchGuideService>();
+builder.Services.AddTransient<IExpenseService, ExpenseService>();
+builder.Services.AddTransient<IGoogleDriveService, GoogleDriveService>();
+
+
+// Register configuration settings and factory
+builder.Services.AddSingleton<GoogleDriveServiceFactory>();
+// Register DriveService as transient or scoped so it's injected automatically
+builder.Services.AddScoped<DriveService>(sp =>
+{
+    var factory = sp.GetRequiredService<GoogleDriveServiceFactory>();
+    return factory.CreateDriveService();
+});
+
 
 
 //if (StorageAzure)
@@ -137,6 +155,8 @@ builder.Services.AddTransient<IDispatchGuideService, DispatchGuideService>();
 //{
 //    builder.Services.AddTransient<IFileStorage, FileStorageLocal>();
 //}
+
+
 
 //Registering healthchecks
 builder.Services.AddHealthChecks()
