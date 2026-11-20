@@ -1,4 +1,5 @@
 ﻿using Stone.Dto.Request;
+using Stone.Entities;
 
 namespace Stone.Dto.Response
 {
@@ -21,6 +22,7 @@ namespace Stone.Dto.Response
         public int? Zone { get; set; }
         public string? ContactPerson { get; set; }
         public string? PhoneContact { get; set; }
+        public ICollection<FileDrive>? Files { get; set; }
 
         public CustomerResponseDto? Customer { get; set; }
         public ICollection<ItemizedProductResponseDto>? ItemizedProducts { get; set; }

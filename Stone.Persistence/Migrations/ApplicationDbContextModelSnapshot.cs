@@ -715,21 +715,16 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("descripcion");
 
                     b.Property<string>("Employee")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("empleado");
 
-                    b.Property<DateTime>("ExpenseDate")
+                    b.Property<DateTime?>("ExpenseDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_gasto");
 
                     b.Property<int>("ExpenseTypeId")
                         .HasColumnType("int")
                         .HasColumnName("gasto_tipo");
-
-                    b.Property<string>("File")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("archivo");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)")
@@ -764,6 +759,76 @@ namespace Stone.Persistence.Migrations
                     b.HasIndex("BudgetId");
 
                     b.ToTable("rendir_gastos", (string)null);
+                });
+
+            modelBuilder.Entity("Stone.Entities.FileDrive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit")
+                        .HasColumnName("activo");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("tipo_contenido");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasColumnName("fecha_creacion")
+                        .HasDefaultValueSql("(GETUTCDATE())");
+
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("int")
+                        .HasColumnName("documento_id");
+
+                    b.Property<int?>("DocumentType")
+                        .HasColumnType("int")
+                        .HasColumnName("tipo_documento");
+
+                    b.Property<string>("FileExtention")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("extension");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("id_archivo");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("nombre_archivo");
+
+                    b.Property<string>("FolderParentId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("carpeta_padre_id");
+
+                    b.Property<long?>("Size")
+                        .HasColumnType("bigint")
+                        .HasColumnName("peso_byte");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("fecha_actualizacion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("archivos", (string)null);
                 });
 
             modelBuilder.Entity("Stone.Entities.Genre", b =>

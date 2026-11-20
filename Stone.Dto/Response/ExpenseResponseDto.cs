@@ -1,4 +1,6 @@
-﻿namespace Stone.Dto.Response
+﻿using Stone.Entities;
+
+namespace Stone.Dto.Response
 {
     public class ExpenseResponseDto
     {
@@ -7,11 +9,11 @@
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public int ExpenseTypeId { get; set; }
-        public DateTime ExpenseDate { get; set; }
-        public string Employee { get; set; }
+        public DateTime? ExpenseDate { get; set; }
+        public string? Employee { get; set; }
         public string? Project { get; set; }
         public int? BudgetId { get; set; }
-        public string? File { get; set; }
+        public ICollection<FileDrive>? Files { get; set; }
         public int Amount { get; set; }
         public int? MethodPaymentId { get; set; }
         public int? PaymentReceiptId { get; set; }

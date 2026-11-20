@@ -8,8 +8,8 @@ namespace Stone.Services.Interface
     {
         Task<BaseResponseGeneric<ICollection<ExpenseResponseDto>>> GetAsync(string searchText, PaginationDto pagination);
         Task<BaseResponseGeneric<ExpenseResponseDto>> GetAsync(int id);
-        Task<BaseResponseGeneric<int>> AddAsync(Expense request);
-        Task<BaseResponse> UpdateAsync(int id, Expense request);
+        Task<BaseResponseGeneric<int>> AddAsync(ExpenseRequestDto request);
+        Task<BaseResponse> UpdateAsync(int id, ExpenseRequestDto request);
         Task<BaseResponse> DeleteAsync(int id);
     }
 }

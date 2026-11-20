@@ -1,4 +1,5 @@
-﻿using Stone.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using Stone.Entities;
 
 namespace Stone.Dto.Request
 {
@@ -26,7 +27,7 @@ namespace Stone.Dto.Request
         public string? SupplierTo { get; set; }
         public string? ProjectTo { get; set; }
         public int? BudgetId { get; set; }
-        public string? File { get; set; } //TODO: Cambiar a tipo de dato adecuado para archivos (e.g., IFormFile)
+        //public ICollection<IFormFile>? Files { get; set; } //TODO: Cambiar a tipo de dato adecuado para archivos (e.g., IFormFile)
         public int? LocationId { get; set; }
         public string? Address { get; set; }
         public int? Commune { get; set; }

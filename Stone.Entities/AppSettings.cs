@@ -4,6 +4,7 @@
     {
         public Jwt Jwt { get; set; } = default!;
         public SmtpConfiguration SmtpConfiguration { get; set; } = default!;
+        public GoogleDrive GoogleDrive { get; set; } = default!;
     }
 
     public class Jwt
@@ -35,5 +36,18 @@
         public bool EnableApiKey { get; set; }
         public string ApiKey { get; set; }
         public string HeaderName { get; set; }
+    }
+
+    public class GoogleDrive
+    {
+        public string ApplicationName { get; set; } = default!;
+        public string ServiceAccountEmail { get; set; } = default!;
+        public string PrivateKey { get; set; } = default!;
+        public string BulgetFolder { get; set; } = default!;
+        public string SharedFolderRoot { get; set; } = default!;
+        public string ReceptionFolder { get; set; } = default!;
+        public string DispatchFolder { get; set; } = default!;
+        public string VoucherFolder { get; set; } = default!;
+        public string ExpenseFolder { get; set; } = default!;
     }
 }

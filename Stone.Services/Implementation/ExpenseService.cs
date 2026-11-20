@@ -1,41 +1,33 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
+using Stone.Api.Enums;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
-using Stone.Repositories.Implementation;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
-using System.ComponentModel;
 
 namespace Stone.Services.Implementation
 {
-    public class ExpenseService : IExpenseService
+    public class ExpenseService(
+        IExpenseRepository expenseRepository,
+        IFileDriveRepository fileDriveRepository,
+        ILogger<IMaterialService> logger,
+        IMapper mapper) : IExpenseService
     {
-        private readonly IExpenseRepository _expenseRepository;
-        private readonly ILogger<IMaterialService> _logger;
-        private readonly IMapper _mapper;
-
-        public ExpenseService(
-            IExpenseRepository expenseRepository,
-            ILogger<IMaterialService> logger,
-            IMapper mapper)
-        {
-            this._expenseRepository = expenseRepository;
-            this._logger = logger;
-            this._mapper = mapper;
-        }
-
+        private readonly IExpenseRepository _expenseRepository = expenseRepository;
+        private readonly IFileDriveRepository _fileDriveRepository = fileDriveRepository;
+        private readonly ILogger<IMaterialService> _logger = logger;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<BaseResponseGeneric<ICollection<ExpenseResponseDto>>> GetAsync(string searchText, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<ExpenseResponseDto>>();
             try
             {
-                var EntityList = await _expenseRepository.GetAsync(predicate: s => 
+                var EntityList = await _expenseRepository.GetAsync(predicate: s =>
                     s.Amount.ToString()!.Contains(searchText ?? string.Empty)
-                    || s.Project.Contains(searchText ?? string.Empty)
+                    || (s.Project != null && s.Project.Contains(searchText ?? string.Empty))
                     || s.Employee!.Contains(searchText ?? string.Empty)
                     || s.Description!.Contains(searchText ?? string.Empty)
                     //|| s.Budget!.Customer!.Person!.DisplayName.Contains(searchText ?? string.Empty)
@@ -54,6 +46,7 @@ namespace Stone.Services.Implementation
                 response.Data = [];
                 foreach (var data in EntityList)
                 {
+                    
                     var expenseResponse = new ExpenseResponseDto
                     {
                         Id = data.Id,
@@ -62,11 +55,10 @@ namespace Stone.Services.Implementation
                         UpdatedAt = data.UpdatedAt,
                         ExpenseTypeId = data.ExpenseTypeId,
                         ExpenseDate = data.ExpenseDate,
-                        Employee = data.Employee,
+                        Employee = data.Employee ?? string.Empty,
                         Project = data.Project,
                         Description = data.Description,
                         BudgetId = data.BudgetId,
-                        File = data.File,
                         Amount = data.Amount,
                         MethodPaymentId = data.MethodPaymentId,
                         PaymentReceiptId = data.PaymentReceiptId,
@@ -93,7 +85,16 @@ namespace Stone.Services.Implementation
             try
             {
                 var data = await _expenseRepository.GetAsync(id);
-                //response.Data = _mapper.Map<Expense>(data);
+                if (data == null)
+                {
+                    response.ErrorMessage = $"No se ha encontrado registro con el id {id}";
+                    return response;
+                }
+
+                var filesEntity = await _fileDriveRepository.GetAsync(
+                    predicate: s => s.DocumentId == data.Id
+                        && s.DocumentType == (int)DocumentType.ExpenseReceipt,
+                    orderBy: x => x.Id);
 
                 var expenseResponse = new ExpenseResponseDto
                 {
@@ -107,18 +108,18 @@ namespace Stone.Services.Implementation
                     Project = data.Project,
                     Description = data.Description,
                     BudgetId = data.BudgetId,
-                    File = data.File,
                     Amount = data.Amount,
                     MethodPaymentId = data.MethodPaymentId,
                     PaymentReceiptId = data.PaymentReceiptId,
                     BillNumber = data.BillNumber,
                     Vehicle = data.Vehicle,
                     Registration = data.Registration,
-                    Location = data.Location
+                    Location = data.Location,
+                    Files = filesEntity
                 };
 
                 response.Data = expenseResponse;
-                response.Success = true; // data != null;
+                response.Success = true;
             }
             catch (Exception ex)
             {
@@ -128,39 +129,43 @@ namespace Stone.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<int>> AddAsync(Expense request)
+        public async Task<BaseResponseGeneric<int>> AddAsync(ExpenseRequestDto request)
         {
             var response = new BaseResponseGeneric<int>();
             Expense entity = new();
             try
             {
-                entity = _mapper.Map<Expense>(request);
-                //if (request.Image is not null)
-                //{
-                //    using (var memoryStream = new MemoryStream())
-                //    {
-                //        await request.Image.CopyToAsync(memoryStream);
-                //        var content = memoryStream.ToArray();
-                //        var extension = Path.GetExtension(request.Image.FileName);
-                //        entity.ImageUrl = await fileStorage.SaveFile(content,
-                //            extension, container, request.Image.ContentType);
-                //    }
-                //}
-                response.Data = await _expenseRepository.AddAsync(entity); ;
+                var newExpense = new Expense
+                {
+                    ExpenseTypeId = request.ExpenseTypeId,
+                    ExpenseDate = request.ExpenseDate,
+                    Employee = request.Employee,
+                    Project = request.Project,
+                    BudgetId = request.BudgetId > 0 ? request.BudgetId : null,
+                    Amount = request.Amount,
+                    MethodPaymentId = request.MethodPaymentId,
+                    PaymentReceiptId = request.PaymentReceiptId,
+                    BillNumber = request.BillNumber,
+                    Description = request.Description,
+                    Vehicle = request.Vehicle,
+                    Registration = request.Registration,
+                    Location = request.Location
+                };
+
+                response.Data = await _expenseRepository.AddAsync(newExpense); ;
                 response.Success = true;
             }
             catch (Exception ex)
             {
-                //await fileStorage.DeleteFile(entity.ImageUrl ?? string.Empty, container);//si ocurre algún error borrar la imagen (si existe)
                 response.ErrorMessage = $"Ocurrió un error en {nameof(ExpenseService)} al añadir la información.";
                 _logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
             return response;
         }
 
-        public async Task<BaseResponse> UpdateAsync(int id, Expense request)
+        public async Task<BaseResponse> UpdateAsync(int id, ExpenseRequestDto request)
         {
-            var response = new BaseResponse();
+            var response = new BaseResponseGeneric<int>();
             try
             {
                 var data = await _expenseRepository.GetAsync(id);
@@ -178,7 +183,6 @@ namespace Stone.Services.Implementation
                 data.Employee = request.Employee;
                 data.Project = request.Project;
                 data.BudgetId = request.BudgetId;
-                data.File = request.File;
                 data.Amount = request.Amount;
                 data.MethodPaymentId = request.MethodPaymentId;
                 data.PaymentReceiptId = request.PaymentReceiptId;
@@ -188,25 +192,9 @@ namespace Stone.Services.Implementation
                 data.Registration = request.Registration;
                 data.Location = request.Location;
 
-                //_mapper.Map(request, data); //sobre escribir data nueva al objeto obtenido en la db
-                //if (request.Image is not null)
-                //{
-                //    using (var memoryStream = new MemoryStream())
-                //    {
-                //        await request.Image.CopyToAsync(memoryStream);
-                //        var content = memoryStream.ToArray();
-                //        var extension = Path.GetExtension(request.Image.FileName);
-                //        data.ImageUrl = await fileStorage.EditFile(content,
-                //            extension, container, data.ImageUrl ?? string.Empty,
-                //            request.Image.ContentType);
-                //    }
-                //}
-                //else
-                //{
-                //    data.ImageUrl = string.Empty;
-                //}
-
                 await _expenseRepository.UpdateAsync();
+
+                response.Data = id;
                 response.Success = true;
             }
             catch (Exception ex)
