@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Stone.Api.Enums;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
 using Stone.Repositories.Implementation;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
+using System.Xml.Linq;
 
 namespace Stone.Services.Implementation
 {
@@ -17,6 +19,7 @@ namespace Stone.Services.Implementation
         private readonly IProviderService _providerService;
         private readonly IMaterialRepository _materialRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IFileDriveRepository _fileDriveRepository;
         private readonly ILogger<IMaterialService> _logger;
         private readonly IMapper _mapper;
         public ReceptionGuideService(IReceptionGuideRepository receptionGuideRepository,
@@ -24,6 +27,7 @@ namespace Stone.Services.Implementation
             IProviderService providerService,
             IMaterialRepository materialRepository,
             IProductRepository productRepository,
+            IFileDriveRepository fileDriveRepository,
             ILogger<IMaterialService> logger,
             IMapper mapper)
         {
@@ -32,6 +36,7 @@ namespace Stone.Services.Implementation
             this._providerService = providerService;
             this._materialRepository = materialRepository;
             this._productRepository = productRepository;
+            this._fileDriveRepository = fileDriveRepository;
             this._logger = logger;
             this._mapper = mapper;
         }
@@ -268,6 +273,11 @@ namespace Stone.Services.Implementation
                     orderBy: x => x.Id,
                     pagination: new PaginationDto { OffSet = 0, Limit = 100 });
 
+                var filesEntity = await _fileDriveRepository.GetAsync(
+                    predicate: s => s.DocumentId == EntityData.Id
+                        && s.DocumentType == (int)DocumentType.ReceptionGuide,
+                    orderBy: x => x.Id);
+
                 var materialResponse = new MaterialResponseDto
                 {
                     Id = EntityData.Id,
@@ -282,7 +292,8 @@ namespace Stone.Services.Implementation
                     Neto = EntityData.Neto,
                     TaxRate = EntityData.TaxRate,
                     TotalValue = EntityData.TotalValue,
-                    GuideDate = EntityData.GuideDate
+                    GuideDate = EntityData.GuideDate,
+                    Files = filesEntity
                 };
 
                 if (materialListEntity is not null && materialListEntity.Count > 0)

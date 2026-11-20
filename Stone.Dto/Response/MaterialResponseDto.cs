@@ -30,7 +30,7 @@ namespace Stone.Dto.Response
         public string? SupplierTo { get; set; }
         public string? ProjectTo { get; set; }
         public int? BudgetId { get; set; }
-        public string? File { get; set; } //TODO: Cambiar a tipo de dato adecuado para archivos (e.g., IFormFile)
+        public ICollection<FileDrive>? Files { get; set; } //TODO: Cambiar a tipo de dato adecuado para archivos (e.g., IFormFile)
         public string? Address { get; set; }
         public int? Zone { get; set; }
         public int? Commune { get; set; }

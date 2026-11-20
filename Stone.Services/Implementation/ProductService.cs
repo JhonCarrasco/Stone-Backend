@@ -11,20 +11,14 @@ namespace Stone.Services.Implementation
     public class ProductService : IProductService
     {
         private readonly IProductRepository productRepository;
-        private readonly IManufacturerRepository manufacturerRepository;
-        private readonly ICategoryRepository categoryRepository;
         private readonly ILogger<ICustomerService> logger;
         private readonly IMapper mapper;
 
         public ProductService(IProductRepository productRepository,
-            IManufacturerRepository manufacturerRepository,
-            ICategoryRepository categoryRepository,
             ILogger<ICustomerService> logger,
             IMapper mapper)
         {
             this.productRepository = productRepository;
-            this.manufacturerRepository = manufacturerRepository;
-            this.categoryRepository = categoryRepository;
             this.logger = logger;
             this.mapper = mapper;
         }

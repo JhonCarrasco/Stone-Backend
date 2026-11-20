@@ -34,7 +34,7 @@ namespace Stone.Api.Controllers
         }
         [HttpPost("expenses")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
-        public async Task<IActionResult> Post(Expense request)
+        public async Task<IActionResult> Post(ExpenseRequestDto request)
         {
             var response = await _expenseService.AddAsync(request);
             return response.Success ? Ok(response) : BadRequest(response);
@@ -42,7 +42,7 @@ namespace Stone.Api.Controllers
 
         [HttpPut("expenses/{id:int}")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Constants.RoleAdmin)]
-        public async Task<IActionResult> Put(int id, Expense request)
+        public async Task<IActionResult> Put(int id, ExpenseRequestDto request)
         {
             var response = await _expenseService.UpdateAsync(id, request);
             return response.Success ? Ok(response) : BadRequest(response);

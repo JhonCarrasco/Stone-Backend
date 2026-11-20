@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Stone.Api.Enums;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
 using Stone.Repositories.Interface;
 using Stone.Services.Interface;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Stone.Services.Implementation
 {
@@ -15,6 +17,7 @@ namespace Stone.Services.Implementation
         private readonly IBudgetRepository budgetRepository;
         private readonly IItemizedProductRepository itemizedProductRepository;
         private readonly IItemizedServiceRepository itemizedServiceRepository;
+        private readonly IFileDriveRepository _fileDriveRepository;
         private readonly IProductRepository _productRepository;
         private readonly ILogger<IBudgetService> logger;
         private readonly IMapper mapper;
@@ -23,6 +26,7 @@ namespace Stone.Services.Implementation
             IBudgetRepository budgetRepository, 
             IItemizedProductRepository itemizedProductRepository, 
             IItemizedServiceRepository itemizedServiceRepository,
+            IFileDriveRepository fileDriveRepository,
             IProductRepository productRepository,
             ILogger<IBudgetService> logger, 
             IMapper mapper)
@@ -30,6 +34,7 @@ namespace Stone.Services.Implementation
             this.budgetRepository = budgetRepository;
             this.itemizedProductRepository = itemizedProductRepository;
             this.itemizedServiceRepository = itemizedServiceRepository;
+            this._fileDriveRepository = fileDriveRepository;
             this._productRepository = productRepository;
             this.logger = logger;
             this.mapper = mapper;
@@ -171,6 +176,11 @@ namespace Stone.Services.Implementation
                 var ItemizedProductsMapper = mapper.Map<ICollection<ItemizedProduct>>(EntityData.ItemizedProducts);
                 var ItemizedServicesMapper = mapper.Map<ICollection<ItemizedService>>(EntityData.ItemizedServices);
 
+                var filesEntity = await _fileDriveRepository.GetAsync(
+                   predicate: s => s.DocumentId == EntityData.Id
+                       && s.DocumentType == (int)DocumentType.Budget,
+                   orderBy: x => x.Id);
+
                 var budgetResponse = new BudgetResponseDto
                 {
                     Id = EntityData.Id,
@@ -189,7 +199,8 @@ namespace Stone.Services.Implementation
                     State = EntityData.State,
                     Zone = EntityData.Zone,
                     ContactPerson = EntityData.ContactPerson,
-                    PhoneContact = EntityData.PhoneContact
+                    PhoneContact = EntityData.PhoneContact,
+                    Files = filesEntity,
                 };
 
                     if (customerMapper is not null)

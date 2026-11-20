@@ -7,15 +7,13 @@ namespace Stone.Entities
         [Column("gasto_tipo")]
         public int ExpenseTypeId {get; set;}
         [Column("fecha_gasto")]
-        public DateTime ExpenseDate {get; set;}
+        public DateTime? ExpenseDate {get; set;}
         [Column("empleado")]
-        public string Employee {get; set;}
+        public string? Employee {get; set;}
         [Column("proyecto")]
         public string? Project {get; set;}
         [Column("presupuesto_id")]
         public int? BudgetId {get; set;}
-        [Column("archivo")]
-        public string? File {get; set;}
         [Column("monto")]
         public int Amount {get; set;}
         [Column("metodo_tipo")]

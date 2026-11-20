@@ -116,6 +116,7 @@ builder.Services.AddTransient<IMaterialVoucherRepository, MaterialVoucherReposit
 builder.Services.AddTransient<IReceptionGuideRepository, ReceptionGuideRepository>();
 builder.Services.AddTransient<IDispatchGuideRepository, DispatchGuideRepository>();
 builder.Services.AddTransient<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddTransient<IFileDriveRepository, FileDriveRepository>();
 
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IConcertService, ConcertService>();

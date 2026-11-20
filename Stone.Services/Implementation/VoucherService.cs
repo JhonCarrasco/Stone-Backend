@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Stone.Api.Enums;
 using Stone.Dto.Request;
 using Stone.Dto.Response;
 using Stone.Entities;
@@ -14,18 +15,21 @@ namespace Stone.Services.Implementation
         private readonly IMaterialVoucherRepository _voucherRepository;
         private readonly IMaterialRepository _materialRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IFileDriveRepository _fileDriveRepository;
         private readonly ILogger<IMaterialService> _logger;
         private readonly IMapper _mapper;
 
         public VoucherService(IMaterialVoucherRepository voucherRepository,
             IMaterialRepository materialRepository,
             IProductRepository productRepository,
+            IFileDriveRepository fileDriveRepository,
             ILogger<IMaterialService> logger,
             IMapper mapper)
         {
             _voucherRepository = voucherRepository;
             _materialRepository = materialRepository;
             _productRepository = productRepository;
+            _fileDriveRepository = fileDriveRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -155,6 +159,11 @@ namespace Stone.Services.Implementation
                     ,orderBy: x => x.Id
                     ,pagination: new PaginationDto { OffSet = 0, Limit = 100 });
 
+                var filesEntity = await _fileDriveRepository.GetAsync(
+                    predicate: s => s.DocumentId == EntityData.Id
+                        && s.DocumentType == (int)DocumentType.Voucher,
+                    orderBy: x => x.Id);
+
                 var materialResponse = new MaterialResponseDto
                 {
                     Id = EntityData.Id,
@@ -165,6 +174,7 @@ namespace Stone.Services.Implementation
                     SupplierTo = EntityData.SupplierTo,
                     ProjectTo = EntityData.ProjectTo,
                     BudgetId = EntityData.BudgetId,
+                    Files = filesEntity
                 };
 
                 if (materialListEntity is not null && materialListEntity.Count > 0)
