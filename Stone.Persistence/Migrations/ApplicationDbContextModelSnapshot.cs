@@ -386,6 +386,10 @@ namespace Stone.Persistence.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("descripcion");
 
+                    b.Property<int>("RegionId")
+                        .HasColumnType("int")
+                        .HasColumnName("region_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("fecha_actualizacion");
@@ -1434,7 +1438,6 @@ namespace Stone.Persistence.Migrations
                         .HasDefaultValueSql("(GETUTCDATE())");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("email");
 
@@ -1447,7 +1450,6 @@ namespace Stone.Persistence.Migrations
                         .HasColumnName("persona_id");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("telefono");
 
