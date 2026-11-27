@@ -5,9 +5,9 @@ namespace Stone.Entities
     public class Provider: EntityBase
     {
         [Column("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Column("telefono")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [Column("giro")]
         public string? BusinessActivity { get; set; }
         [Column("persona_id")]

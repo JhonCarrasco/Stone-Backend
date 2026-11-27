@@ -6,5 +6,7 @@ namespace Stone.Entities
     {
         [Column("descripcion")]
         public string Description { get; set; }
+        [Column("region_id")]
+        public int RegionId { get; set; }
     }
 }

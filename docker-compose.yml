@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   azuresqledge:
@@ -13,13 +13,17 @@ services:
     volumes:
       - sqldata:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Esteban123! -Q 'SELECT 1'"]
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Esteban123! -Q 'SELECT 1'",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   stone-api:
-    image: stone-backend-api:1.0.0
+    image: stone-backend-api:1.0.1
     container_name: stone-api
     build:
       context: .
